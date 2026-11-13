@@ -468,3 +468,13 @@
   - `th:action="@{/posts/{id}/delete(id=${post.id})}"` — 링크 표현식으로 주소를 만든다(시큐리티 도입 후 CSRF 토큰 자동 삽입에도 유리).
   - `PostService.delete(post)` → `postRepository.delete(post)`.
   - 테스트 `PostControllerTest.t1` : MockMvc 로 삭제 요청 후 리다이렉트 주소와 실제 삭제 여부 확인.
+
+### 029-B 목록 최신순 + 페이징 `나아가기`
+
+- **개선점 발견** : 목록이 오래된 글부터 나오고, 글이 많아지면 한 화면에 전부 출력된다. ([위키독스 3-09 페이징](https://wikidocs.net/161186) 참고)
+- **추가한 기능** : `GET /posts?page=N` — 최신글(id 내림차순) 먼저, 한 페이지 10개. 목록 아래 "이전 / 페이지 번호 / 다음" 링크(현재 페이지 앞뒤 4페이지까지, 현재 페이지는 굵게).
+- **구현 설명**
+  - `PostService.getPage(page)` : `PageRequest.of(page - 1, 10, Sort.by(Sort.Order.desc("id")))` 로 `postRepository.findAll(pageable)` 호출. JPA 가 `LIMIT/OFFSET` 쿼리와 전체 개수 `COUNT` 쿼리를 함께 실행한다. 사용자에게 보이는 page 는 1부터, 스프링 Data 는 0부터라서 변환한다.
+  - 리턴 타입 `Page<Post>` 는 `Iterable` 이라 기존 `th:each="post : ${posts}"` 를 그대로 쓴다. `totalPages`, `number`, `hasPrevious()`, `hasNext()` 로 페이지 링크를 그린다.
+  - `th:with` 로 `currentPage/startPage/endPage` 계산, `T(java.lang.Math)` 로 정적 메서드 호출, `#numbers.sequence(start, end)` 로 번호 반복.
+  - 테스트 `t2` : 글 25개 생성 후 1페이지 첫 글이 최신글인지, 2페이지에 해당 글과 현재 페이지 표시가 있는지 확인.

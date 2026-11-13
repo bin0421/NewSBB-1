@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -124,8 +126,11 @@ public class PostController {
 
     @GetMapping("/posts")
     @Transactional(readOnly = true)
-    public String showList(Model model) {
-        List<Post> posts = postService.findAll();
+    public String showList(
+            Model model,
+            @RequestParam(defaultValue = "1") int page // 029-B 나아가기 : 페이징
+    ) {
+        Page<Post> posts = postService.getPage(page);
 
         model.addAttribute("posts", posts);
 
