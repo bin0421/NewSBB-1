@@ -544,3 +544,9 @@
 - **개선점 발견** : 잘못 쓴 댓글을 지울 수 없다.
 - **추가한 기능** : 댓글마다 수정/삭제 링크, `GET /posts/{postId}/comments/{id}/delete`, `Post.findCommentById`, `Post.deleteComment`, `PostService.deleteComment`.
 - **구현 설명** : 댓글은 글을 통해 다룬다 — 글의 `comments` 리스트에서 찾아 `remove` 한다. 의도된 실패 단계 : 컬렉션에서 빼기만 해서는 JPA 가 DELETE 를 실행하지 않는다(연관관계 주인은 `PostComment.post` 쪽이므로).
+
+### 034-2 orphanRemoval 로 성공 `복습하기`
+
+- **개선점 발견** : 리스트에서 뺀 댓글이 DB 에 그대로 남는다.
+- **추가한 기능** : `@OneToMany(..., orphanRemoval = true)`.
+- **구현 설명** : 부모 컬렉션에서 제거되어 고아가 된 자식 엔티티를 JPA 가 자동으로 DELETE 한다. 객체 세계의 "리스트에서 제거" 가 DB 의 "삭제" 와 일치하게 된다.
