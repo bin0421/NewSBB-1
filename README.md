@@ -196,3 +196,9 @@
 - **개선점 발견** : 서버가 `errorFieldName` 을 따로 계산해서 넘기는 것은 중복이다. 이미 HTML 에 정보가 있다.
 - **추가한 기능** : `<li>` 문자열을 `sorted()` 해(앞의 `<!--01-->` 주석 덕분에 순번대로 정렬) 출력하고, 스크립트가 첫 번째 `li` 의 `data-error-field-name` 을 읽어 포커스.
 - **구현 설명** : `lastForm.previousElementSibling?.querySelector('li')?.dataset?.errorFieldName || ''`. 옵셔널 체이닝(`?.`)으로 에러가 없을 때도 안전. `getWriteFormHtml` 에서 `errorFieldName` 인자를 제거했다.
+
+### 014-1 타임리프 도입, write.html `복습하기`
+
+- **개선점 발견** : 자바 문자열 안에 HTML을 쓰니 에디터 지원(자동완성, 하이라이트)도 없고 `%s` 순서 맞추기도 번거롭다.
+- **추가한 기능** : `templates/post/post/write.html` 템플릿을 만들고 `GET /posts/write` 는 뷰 이름 `"post/post/write"` 를 리턴.
+- **구현 설명** : `@ResponseBody` 를 떼면 리턴 문자열은 응답 본문이 아니라 **뷰 이름**이 되고, 타임리프가 `classpath:/templates/{뷰이름}.html` 을 찾아 렌더링한다. 템플릿 경로는 패키지 구조(`domain/post/post`)와 맞췄다. POST 쪽은 아직 문자열 HTML.

@@ -22,10 +22,6 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
 
-    private String getWriteFormHtml() {
-        return getWriteFormHtml("", "", "");
-    }
-
     private String getWriteFormHtml(String errorMessage, String title, String content) {
         return """
                 <ul style="color: red;">
@@ -57,9 +53,8 @@ public class PostController {
     }
 
     @GetMapping("/posts/write")
-    @ResponseBody
     public String showWrite() {
-        return getWriteFormHtml();
+        return "post/post/write";
     }
 
 
