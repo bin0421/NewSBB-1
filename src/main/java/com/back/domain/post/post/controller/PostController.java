@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -78,7 +79,12 @@ public class PostController {
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            return getWriteFormHtml();
+            FieldError fieldError = bindingResult.getFieldError();
+
+            String errorFieldName = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
+
+            return getWriteFormHtml(errorFieldName, errorMessage, form.getTitle(), form.getContent());
         }
 
         Post post = postService.write(form.getTitle(), form.getContent());
