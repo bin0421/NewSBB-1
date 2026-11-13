@@ -4,6 +4,7 @@ import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
+import com.back.domain.post.postComment.entity.PostComment;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -218,5 +219,19 @@ class PostControllerTest {
 
         mvc.perform(post(url + "/vote").with(csrf())).andExpect(redirectedUrl(url));
         assertThat(post.getVoters()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("044-B 댓글 추천 : 누르면 추천, 다시 누르면 추천 취소")
+    void t11() throws Exception {
+        Post post = postService.write(user1(), "댓글 추천 글", "댓글 추천 내용");
+        PostComment postComment = postService.writeComment(post, user1(), "추천할 댓글");
+        String url = "/posts/%d/comments/%d/vote".formatted(post.getId(), postComment.getId());
+
+        mvc.perform(post(url).with(csrf())).andExpect(redirectedUrl("/posts/" + post.getId()));
+        assertThat(postComment.isVotedBy(user1())).isTrue();
+
+        mvc.perform(post(url).with(csrf()));
+        assertThat(postComment.getVoters()).isEmpty();
     }
 }

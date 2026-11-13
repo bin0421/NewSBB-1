@@ -82,6 +82,13 @@
             <h4>작성일 : <span th:text="${#temporals.format(postComment.createDate, 'yy.MM.dd HH:mm')}">작성일</span></h4>
             <h4>수정일 : <span th:text="${#temporals.format(postComment.modifyDate, 'yy.MM.dd HH:mm')}">수정일</span></h4>
             <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
+            <!-- 044-B 나아가기 : 댓글 추천 -->
+            <div>
+                추천 : <span th:text="${postComment.voters.size()}">0</span>
+                <a th:unless="${currentUsername == null}" method="POST"
+                   th:href="@{/posts/{id}/comments/{commentId}/vote(id=${post.id}, commentId=${postComment.id})}"
+                   th:text="${postComment.isVotedBy(@rq.actor)} ? '추천 취소' : '추천'">추천</a>
+            </div>
             <!-- 043-B 나아가기 : 댓글 작성자 본인에게만 수정/삭제 -->
             <div th:if="${currentUsername != null and postComment.author?.username == currentUsername}">
                 <a th:href="@{/posts/{id}/comments/{commentId}/modify(id=${post.id}, commentId=${postComment.id})}">수정</a>

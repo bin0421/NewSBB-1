@@ -96,4 +96,20 @@ public class PostCommentController {
 
         return "redirect:/posts/" + postId;
     }
+
+
+    // 044-B 나아가기 : 댓글 추천 / 추천 취소
+    @PostMapping("/posts/{postId}/comments/{id}/vote")
+    @Transactional
+    public String vote(
+            @PathVariable int postId,
+            @PathVariable int id
+    ) {
+        Post post = postService.findById(postId).get();
+        PostComment postComment = post.findCommentById(id).get();
+
+        postService.toggleCommentVote(postComment, rq.getActor());
+
+        return "redirect:/posts/" + postId;
+    }
 }

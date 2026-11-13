@@ -75,4 +75,9 @@ public class PostService {
     public void toggleVote(Post post, Member actor) {
         post.toggleVote(actor);
     }
+
+    // 044-B 나아가기 : 댓글 추천 / 추천 취소
+    public void toggleCommentVote(PostComment postComment, Member actor) {
+        postComment.toggleVote(actor);
+    }
 }
