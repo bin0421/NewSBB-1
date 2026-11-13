@@ -124,3 +124,9 @@
 - **개선점 발견** : 내용이 비어서 실패해도 커서는 autofocus 때문에 제목에 간다.
 - **추가한 기능** : 실패한 필드 이름(`errorFieldName`)을 넘겨 자바스크립트로 그 필드에 포커스.
 - **구현 설명** : `getWriteFormHtml(errorFieldName, errorMessage, title, content)`. 폼 뒤의 `<script>` 에서 `document.querySelectorAll('form')` 중 마지막 폼을 찾고 `lastForm[errorFieldName].focus()`. 폼 요소는 `form['name']` 으로 필드에 접근할 수 있다. 스크립트가 폼 뒤에 있어야 폼이 이미 만들어진 상태다.
+
+### 009-1 제목 2~20자, 내용 2~100자 `복습하기`
+
+- **개선점 발견** : 한 글자 제목이나 지나치게 긴 내용도 저장된다.
+- **추가한 기능** : 제목 2~20자, 내용 2~100자 길이 체크를 `if` 문으로 추가.
+- **구현 설명** : 체크 항목이 늘어날수록 `if` 문이 길어진다. 이 반복을 다음 커밋에서 어노테이션으로 바꾼다.

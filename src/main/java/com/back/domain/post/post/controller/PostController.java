@@ -61,7 +61,11 @@ public class PostController {
             @RequestParam(defaultValue = "") String content
     ) {
         if (title.isBlank()) return getWriteFormHtml("title", "제목을 입력해주세요.", title, content);
+        if (title.length() < 2) return getWriteFormHtml("title", "제목을 2자 이상 적어주세요.", title, content);
+        if (title.length() > 20) return getWriteFormHtml("title", "제목은 최대 20자까지 입력가능합니다.", title, content);
         if (content.isBlank()) return getWriteFormHtml("content", "내용을 입력해주세요.", title, content);
+        if (content.length() < 2) return getWriteFormHtml("content", "내용을 2자 이상 적어주세요.", title, content);
+        if (content.length() > 100) return getWriteFormHtml("content", "내용은 최대 100자까지 입력가능합니다.", title, content);
 
         Post post = postService.write(title, content);
 
