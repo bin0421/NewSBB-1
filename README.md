@@ -562,3 +562,9 @@
 - **개선점 발견** : 막기만 하면 삭제를 할 수 없다.
 - **추가한 기능** : `onclick="return confirm('정말 삭제하시겠습니까?');"`.
 - **구현 설명** : `confirm()` 은 확인이면 `true`, 취소면 `false` 를 리턴하므로 확인을 누른 경우에만 이동한다.
+
+### 034-5 BaseEntity equals/hashCode `복습하기`
+
+- **개선점 발견** : `comments.remove(postComment)` 는 `equals` 로 대상을 찾는다. 기본 `equals` 는 같은 인스턴스만 같다고 보므로, 다른 경로로 조회한 같은 댓글은 지워지지 않을 수 있다.
+- **추가한 기능** : `BaseEntity` 에 클래스와 `id` 가 같으면 같은 엔티티로 보는 `equals`, `hashCode` 오버라이딩.
+- **구현 설명** : 엔티티의 동일성 기준은 식별자(id). `equals` 를 바꾸면 `hashCode` 도 함께 바꿔야 `HashSet`/`HashMap` 에서 일관되게 동작한다.
