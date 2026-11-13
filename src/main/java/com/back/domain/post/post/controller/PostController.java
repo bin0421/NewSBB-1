@@ -115,11 +115,13 @@ public class PostController {
     @Transactional(readOnly = true)
     public String showList(
             Model model,
-            @RequestParam(defaultValue = "1") int page // 029-B 나아가기 : 페이징
+            @RequestParam(defaultValue = "1") int page, // 029-B 나아가기 : 페이징
+            @RequestParam(defaultValue = "") String kw // 045-A 나아가기 : 검색어
     ) {
-        Page<Post> posts = postService.getPage(page);
+        Page<Post> posts = postService.getPage(page, kw);
 
         model.addAttribute("posts", posts);
+        model.addAttribute("kw", kw);
 
         return "post/post/list";
     }

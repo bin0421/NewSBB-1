@@ -234,4 +234,22 @@ class PostControllerTest {
         mvc.perform(post(url).with(csrf()));
         assertThat(postComment.getVoters()).isEmpty();
     }
+
+    @Test
+    @DisplayName("045-A 검색 : 제목·내용·작성자로 찾고, 페이지 링크에 검색어가 유지된다")
+    void t12() throws Exception {
+        Member user2 = memberService.findByUsername("user2").get();
+        postService.write(user1(), "스프링 부트 공부", "검색 테스트");
+        postService.write(user1(), "아무 제목", "타임리프는 재밌다");
+        for (int i = 1; i <= 11; i++) postService.write(user2, "검색용 " + i, "검색어zz 포함");
+
+        assertThat(postService.getPage(1, "스프링").getTotalElements()).isEqualTo(1);
+        assertThat(postService.getPage(1, "타임리프").getTotalElements()).isEqualTo(1);
+        assertThat(postService.getPage(1, "user2").getTotalElements()).isGreaterThanOrEqualTo(11);
+
+        mvc.perform(get("/posts").param("kw", "검색어zz"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("검색용 11")))
+                .andExpect(content().string(containsString("kw=%EA%B2%80%EC%83%89%EC%96%B4zz")));
+    }
 }

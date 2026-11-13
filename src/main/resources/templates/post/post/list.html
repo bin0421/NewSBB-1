@@ -8,6 +8,13 @@
 
     <h2>글 목록</h2>
 
+    <!-- 045-A 나아가기 : 검색 -->
+    <form method="GET" th:action="@{/posts}">
+        <input type="search" name="kw" placeholder="제목, 내용, 작성자" th:value="${kw}">
+        <button type="submit">검색</button>
+    </form>
+    <div th:if="${posts.isEmpty()}">검색 결과가 없습니다.</div>
+
     <ul>
         <li th:each="post : ${posts}">
             <a th:href="@{/posts/{id}(id=${post.id})}" th:text="|${post.id} : ${post.title}|">글 제목</a>
@@ -28,12 +35,12 @@
          th:with="currentPage = ${posts.number + 1},
                   startPage = ${T(java.lang.Math).max(1, currentPage - 4)},
                   endPage = ${T(java.lang.Math).min(posts.totalPages, currentPage + 4)}">
-        <a th:if="${posts.hasPrevious()}" th:href="@{/posts(page=${currentPage - 1})}">이전</a>
+        <a th:if="${posts.hasPrevious()}" th:href="@{/posts(page=${currentPage - 1}, kw=${kw})}">이전</a>
         <th:block th:each="p : ${#numbers.sequence(startPage, endPage)}">
             <strong th:if="${p == currentPage}" th:text="${p}"></strong>
-            <a th:unless="${p == currentPage}" th:href="@{/posts(page=${p})}" th:text="${p}"></a>
+            <a th:unless="${p == currentPage}" th:href="@{/posts(page=${p}, kw=${kw})}" th:text="${p}"></a>
         </th:block>
-        <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${currentPage + 1})}">다음</a>
+        <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${currentPage + 1}, kw=${kw})}">다음</a>
     </div>
 
 </div>

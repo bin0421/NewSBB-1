@@ -30,10 +30,15 @@ public class PostService {
 
     // 029-B 나아가기 : 페이징 (page 는 1부터 시작)
     public Page<Post> getPage(int page) {
+        return getPage(page, "");
+    }
+
+    // 045-A 나아가기 : 검색어(kw)가 있으면 검색 결과를 페이징
+    public Page<Post> getPage(int page, String kw) {
         int pageNumber = Math.max(page, 1) - 1;
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(Sort.Order.desc("id")));
 
-        return postRepository.findAll(pageable);
+        return postRepository.search(kw == null ? "" : kw.trim(), pageable);
     }
 
     public static final int PAGE_SIZE = 10;
