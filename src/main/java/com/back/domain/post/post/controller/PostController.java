@@ -98,12 +98,13 @@ public class PostController {
 
 
     @GetMapping("/posts/{id}")
-    @Transactional(readOnly = true)
+    @Transactional // 047-B : 조회수를 올리므로 readOnly 해제
     public String showDetail(
             @PathVariable int id,
             Model model
     ) {
         Post post = postService.findById(id).get();
+        postService.increaseViewCount(post); // 047-B 나아가기 : 조회수 증가
 
         model.addAttribute("post", post);
 

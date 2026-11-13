@@ -320,4 +320,17 @@ class PostControllerTest {
                 .andExpect(content().string(containsString("커뮤니티 사이트 A all rights reserved.")))
                 .andExpect(content().string(containsString("user1님")));
     }
+
+    @Test
+    @DisplayName("047-B 조회수 : 상세페이지를 볼 때마다 1씩 증가")
+    void t17() throws Exception {
+        Post post = postService.write(user1(), "조회수 글", "조회수 내용");
+        assertThat(post.getViewCount()).isZero();
+
+        mvc.perform(get("/posts/%d".formatted(post.getId()))).andExpect(status().isOk());
+        mvc.perform(get("/posts/%d".formatted(post.getId())))
+                .andExpect(content().string(containsString("조회수 : <span>2</span>")));
+
+        assertThat(post.getViewCount()).isEqualTo(2);
+    }
 }

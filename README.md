@@ -821,3 +821,17 @@
   - 정적 파일까지 찾지 못한 요청은 `NoResourceFoundException` 이 발생한다. `@ExceptionHandler({NoSuchElementException.class, NoResourceFoundException.class})` 로 함께 처리.
   - ⚠️ `@ExceptionHandler` 가 만드는 모델에는 `@ControllerAdvice` 의 `@ModelAttribute`(041-B `currentUsername`)가 적용되지 않는다. 그래서 에러 페이지 헤더가 로그인 상태여도 "로그인/회원가입"으로 보였다 → 핸들러에서 `request.getUserPrincipal()` 로 직접 넣었다.
   - 테스트 `t16` : `/` 리다이렉트, 없는 주소 404 + 레이아웃 푸터 + 로그인 사용자 헤더 확인.
+
+### 047-B 조회수 `나아가기`
+
+- **개선점 발견** : 글이 얼마나 읽혔는지 알 수 없다. ([추가 기능 예시](https://wikidocs.net/162814) 의 "조회 수" 참고)
+- **추가한 기능** : 상세페이지를 열 때마다 조회수 +1. 상세에 "조회수 : N", 목록에 "조회 N".
+- **구현 설명**
+  - `Post.viewCount`(`int`) + `increaseViewCount()`. 상세 액션이 데이터를 바꾸게 되므로 `@Transactional(readOnly = true)` 를 일반 `@Transactional` 로 바꿨다(readOnly 트랜잭션에서는 변경 감지가 UPDATE 를 실행하지 않는다).
+  - 기존 DB 에는 글이 이미 있으므로 `ddl-auto: update` 로 NOT NULL 컬럼을 추가하려면 기본값이 필요하다 → 하이버네이트 `@ColumnDefault("0")`.
+  - 단순 구현이라 새로고침할 때마다 올라가고, 동시에 많은 요청이 오면 갱신이 겹칠 수 있다(개선 여지: 쿠키/세션으로 중복 방지, `update ... set view_count = view_count + 1` 쿼리).
+  - 테스트 `t17` : 두 번 조회하면 2.
+
+---
+
+**나아가기 로드맵(042~047) 완료** — 강사 저장소(041-5)에 회원가입·로그인, 작성자, 권한, 추천, 검색·정렬, 마크다운, 앵커, 페이징, 404/403 처리, 조회수가 더해졌다.

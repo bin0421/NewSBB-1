@@ -95,4 +95,9 @@ public class PostService {
     public void toggleCommentVote(PostComment postComment, Member actor) {
         postComment.toggleVote(actor);
     }
+
+    // 047-B 나아가기 : 조회수 증가
+    public void increaseViewCount(Post post) {
+        post.increaseViewCount();
+    }
 }

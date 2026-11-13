@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import org.hibernate.annotations.ColumnDefault;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +30,10 @@ public class Post extends BaseEntity {
     private Member author; // 042-A 나아가기 : 작성자
     private String title;
     private String content;
+
+    // 047-B 나아가기 : 조회수 (기존 행에도 컬럼을 추가할 수 있게 DB 기본값 0)
+    @ColumnDefault("0")
+    private int viewCount;
 
     @OneToMany(mappedBy = "post", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private final List<PostComment> comments = new ArrayList<>();
@@ -90,5 +95,10 @@ public class Post extends BaseEntity {
     public void toggleVote(Member member) {
         if (isVotedBy(member)) voters.removeIf(voter -> voter.getId() == member.getId());
         else voters.add(member);
+    }
+
+    // 047-B 나아가기 : 조회수 증가
+    public void increaseViewCount() {
+        viewCount++;
     }
 }
