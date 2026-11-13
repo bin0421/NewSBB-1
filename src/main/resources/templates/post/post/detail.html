@@ -1,4 +1,9 @@
 <html layout:decorate="~{layout}">
+
+<head>
+    <title th:text="|${post.id}번 글 본문 - ${post.title}|"></title>
+</head>
+
 <div layout:fragment="content">
 
     <h2>번호 : [[${post.id}]]</h2>

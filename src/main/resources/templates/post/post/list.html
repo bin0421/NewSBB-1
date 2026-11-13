@@ -1,42 +1,38 @@
 <html layout:decorate="~{layout}">
+
+<head>
+    <title>글 목록</title>
+</head>
+
 <div layout:fragment="content">
 
     <h2>글 목록</h2>
 
-<<<<<<< ours
-<ul>
-    <li th:each="post : ${posts}">
-        <a th:href="@{/posts/{id}(id=${post.id})}" th:text="|${post.id} : ${post.title}|">글 제목</a>
-        <!-- 036-A 나아가기 : 댓글 수 -->
-        <span th:unless="${post.comments.isEmpty()}" style="color: red;" th:text="|[${post.comments.size()}]|">[댓글 수]</span>
-        <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}">작성일</span>
-    </li>
-</ul>
-=======
     <ul>
         <li th:each="post : ${posts}">
             <a th:href="@{/posts/{id}(id=${post.id})}" th:text="|${post.id} : ${post.title}|">글 제목</a>
+            <!-- 036-A 나아가기 : 댓글 수 -->
+            <span th:unless="${post.comments.isEmpty()}" style="color: red;" th:text="|[${post.comments.size()}]|">[댓글 수]</span>
             <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}">작성일</span>
         </li>
     </ul>
->>>>>>> theirs
 
     <div>
         <a href="posts/write">글 쓰기</a>
     </div>
 
-<!-- 029-B 나아가기 : 페이징 (현재 페이지 기준 앞뒤 4페이지까지 표시) -->
-<div th:if="${posts.totalPages > 1}"
-     th:with="currentPage = ${posts.number + 1},
-              startPage = ${T(java.lang.Math).max(1, currentPage - 4)},
-              endPage = ${T(java.lang.Math).min(posts.totalPages, currentPage + 4)}">
-    <a th:if="${posts.hasPrevious()}" th:href="@{/posts(page=${currentPage - 1})}">이전</a>
-    <th:block th:each="p : ${#numbers.sequence(startPage, endPage)}">
-        <strong th:if="${p == currentPage}" th:text="${p}"></strong>
-        <a th:unless="${p == currentPage}" th:href="@{/posts(page=${p})}" th:text="${p}"></a>
-    </th:block>
-    <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${currentPage + 1})}">다음</a>
-</div>
+    <!-- 029-B 나아가기 : 페이징 (현재 페이지 기준 앞뒤 4페이지까지 표시) -->
+    <div th:if="${posts.totalPages > 1}"
+         th:with="currentPage = ${posts.number + 1},
+                  startPage = ${T(java.lang.Math).max(1, currentPage - 4)},
+                  endPage = ${T(java.lang.Math).min(posts.totalPages, currentPage + 4)}">
+        <a th:if="${posts.hasPrevious()}" th:href="@{/posts(page=${currentPage - 1})}">이전</a>
+        <th:block th:each="p : ${#numbers.sequence(startPage, endPage)}">
+            <strong th:if="${p == currentPage}" th:text="${p}"></strong>
+            <a th:unless="${p == currentPage}" th:href="@{/posts(page=${p})}" th:text="${p}"></a>
+        </th:block>
+        <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${currentPage + 1})}">다음</a>
+    </div>
 
 </div>
 </html>
