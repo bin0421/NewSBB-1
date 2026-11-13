@@ -1,0 +1,158 @@
+NewSBB-1 진행 기록
+==================
+- 저장소 : https://github.com/bin0421/NewSBB-1
+- 로컬 폴더 : C:\projects\NewSBB
+- 시작일 : 2026-11-13
+- 용도 : 프롬프트와 진행 과정을 버전 관리용으로 기록한다.
+         진행 중 개선점이 생기면 새 세션 + 새 저장소(NewSBB-2 ...)로 다시 진행한다.
+
+
+[1] 원본 프롬프트
+-----------------
+# 스프링부트 복습을 위한 단계별 코딩 과정을 깃허브에 레포지터리를 만들고 순서대로 커밋할거야
+## 이 프로젝트의 폴더명은 NewSBB
+## 첫 레포지터리 주소는 https://github.com/bin0421/NewSBB-1
+## 버전 관리
+### 해당 프롬프트와 진행 과정을 정리할 텍스트 파일 NewSBB-1 만들어
+### 진행 중 마음에 들지 않거나 개선점을 알게되면 새로운 세션과 저장소로 진행할 예정이기 때문에 버전 관리 및 기록용이야
+
+# 주제는 아래 설명을 참고한다
+## https://wikidocs.net/book/7601 책 설명의 3장 SBB 서비스 개발 과정
+## https://www.slog.gg/p/14168 해당 사이트 강사의 설명 과정과
+## https://github.com/jhs512/p-14168-2 저장소의 소스 코드를 참조한다
+## 위 참조된 내용을 단계별로 구현하고 커밋한다(복습하기로 명칭)
+### 복습하기는 참조 사이트를 통해 커밋 순서를 그대로 유지
+## 위 참조된 내용에는 없지만 개선될 여지가 있거나 유사한 기능이 추가 가능하다면 단계별로 구현하고 커밋한다(나아가기로 명칭)
+### 나아가기 예시는 다음 사이트 참조 https://wikidocs.net/162814
+### 나아가기는 각 단계에서 최대 2개까지만 추가하고 기능 유지하되 억지로 늘리지 말 것
+## 최종적으로 강사의 설명과 소스 코드보다 기능이 풍부한 SBB 서비스를 구현
+
+# 단계별로 구현 및 커밋
+## 하나의 단계는 단일 개선점 발견 -> 개선점(기능) 추가 -> 기능 구현 설명의 구조
+## 하나의 커밋 전 커밋 여부 물어볼 것
+## 커밋마다 번호와 내용(추가된 개선점)을 커밋 메세지로 사용
+### 복습하기 예시 001-1 폼 생성, 001-2 ...
+### 나아가기 예시 001-A 폼 삭제, 001-B ...
+## 커밋 후 README.md에 번호와 자세한 설명을 일지처럼 작성
+
+# 구현 과정 이슈 관리
+## 복습하기 구현 과정에서 헷갈리거나 정확하지 않은 이슈는 마음대로 결정하지 말고 질문
+## 나아가기 구현 과정 전 추가하려는 기능 목록을 단계별로 먼저 보여주고, 복습하기와 중복되지 않도록 함
+
+# 그 외 결정해야 할 사항은 물어볼 것
+
+
+[2] 결정 사항 (2026-11-13)
+-------------------------
+1. 프로젝트 위치 : C:\projects\NewSBB
+2. Java : 참조와 동일하게 JDK 25 (Temurin 25.0.5 설치) / Spring Boot 4.1.2 / Gradle 9.8.2 (Kotlin DSL)
+3. 범위 : 복습하기 = 강사 저장소(p-14168-2) 커밋 001 ~ 041-5 를 그대로.
+          위키독스 3장 중 강사 저장소에 없는 기능(회원가입, 로그인, 페이징, 작성자, 추천, 검색, 마크다운 등)은
+          나아가기 후보로 다룬다.
+4. README.md 일지는 해당 단계 구현과 같은 커밋에 포함한다.
+5. 패키지/루트 프로젝트명은 강사 저장소와 동일하게 com.back / back 유지 (build.gradle.kts description 만 NewSBB).
+6. 복습하기 번호는 강사 저장소 번호를 그대로 사용한다(003, 008, 017 등 빠진 번호는 강의 설명만 있는 회차).
+
+
+[3] 복습하기 커밋 목록 (강사 저장소 기준, 출처: slog.gg/p/14168)
+---------------------------------------------------------------
+001    프로젝트 세팅
+002    샘플 데이터(글 3건) 자동 생성
+003    글 작성 폼
+004-1  폼 action 에서 프로토콜/도메인/포트 생략
+004-2  폼 action 에서 겹치는 path 생략
+005    /posts/doWrite 액션 메서드로 글 작성
+006    폼 전송은 GET 이 아니라 POST
+007-1  PostController 를 controller 패키지로 옮김, title/content 유효성 체크
+007-2  title 체크 실패시 메세지와 폼 함께 표시
+007-3  content 체크 실패시 메세지와 폼 함께 표시
+007-4  getWriteFormHtml 도입으로 폼 중복 제거
+008-1  폼 재표시 때 기존 입력값 유지
+008-2  autofocus 로 title 기본 포커스
+008-3  유효성 실패 필드 포커스
+009-1  제목 2~20자, 내용 2~100자
+009-2  Validation 의존성, @Validated, @NotBlank, @Size
+010    @ModelAttribute 로 입력값을 객체로 받기, @Valid
+011-1  BindingResult 로 유효성 실패 예외 막기
+011-2  대표 에러 하나를 폼에 출력
+011-3  유효성 어노테이션 커스텀 메세지
+012-1  getFieldErrors() + 스트림으로 모든 에러 표시
+012-2  커스텀 메세지 앞 숫자로 순서 지정
+013-1  커스텀 메세지 앞에 필드명 추가
+013-2  메세지를 li 로 감싸고 data-error-field-name 추가
+013-3  정렬 후 첫 에러 필드 포커스(프론트)
+014-1  타임리프 도입, write.html
+014-2  getWriteFormHtml 제거, writeDone.html
+014-3  th:text 는 이스케이프
+014-4  th:utext 는 이스케이프 안 함
+014-5  writeForm.title/content 로 값 유지 (GET /posts/write 실패)
+014-6  writeForm?.title 사용 (GET 성공)
+014-7  writeForm.title 복귀, showWrite 에 @Valid WriteForm 추가
+014-8  @Valid 제거로 GET 성공
+015    타임리프 캐시 끄기, @ModelAttribute("form")
+016    @ModelAttribute("siteName") 공통 변수
+017    th:block
+018    label for/id
+019-1  th:object
+019-2  th:field
+020-1  #fields 로 에러 메세지 출력
+020-2  에러 메세지 정렬, focus 스크립트 일단 제거
+021-1  커스텀 메세지에 필드이름 추가
+021-2  data-error-field-name 하드코딩
+021-3  th: 없이 split (실패)
+021-4  th: 붙여 성공
+021-5  th:with 로 변수화
+022-1  focus 스크립트 복원, ul 은 form 의 자식
+022-2  ul 아래 스크립트는 실패
+022-3  setTimeout 1초 지연
+022-4  0.001초 지연
+022-5  지연 시간 생략
+022-6  프래그먼트로 등록
+023-1  POST /posts/doWrite -> POST /posts/write
+023-2  현재 페이지 action 생략
+024    meta refresh 3초
+025-1  meta refresh 0초
+025-2  액션메서드에서 302 응답
+026-1  글 상세페이지, 작성 후 상세로 이동
+026-2  white-space: pre-line
+026-3  상세에 글쓰기/목록/수정 링크
+026-4  수정 링크 타임리프스럽게
+026-5  글 목록 @ResponseBody List (JSON)
+027-1  필드별 getter 접근 레벨 조절
+027-2  원상복구
+028-1  list.html
+028-2  상세에 작성/수정 날짜
+029-1  modify.html
+029-2  수정 처리 후 상세로 이동
+030-1  PostComment 엔티티, 샘플 데이터 (실패)
+030-2  self + @Transactional 로 성공
+031    댓글 목록
+032-1  댓글 작성 폼
+032-2  onsubmit="return false;"
+032-3  PostComment__submitWriteForm
+032-4  프론트 유효성 체크 후 form.submit()
+033    댓글 작성 처리
+034-1  댓글 삭제 (orphanRemoval 없어 실패)
+034-2  orphanRemoval 로 성공
+034-3  onclick="return false;"
+034-4  confirm 으로 교체
+034-5  BaseEntity equals/hashCode
+035    equals 에 동일성 비교 추가
+036-1  댓글 수정 폼/처리
+036-2  댓글 수정 폼 유효성 스크립트
+037    폼 DTO 를 record 로
+038    _method 파라미터로 Put/DeleteMapping
+039-1  layout 라이브러리, global.js, siteName 제거
+039-2  댓글 삭제 DELETE MAPPING
+039-3  댓글 삭제 DELETE MAPPING
+040    layout:title-pattern
+041-1  시큐리티 도입 (모든 요청 막힘)
+041-2  모든 요청 허용, 정적 콘텐츠 폴더
+041-3  hidden input 으로 CSRF 토큰
+041-4  th:action 으로 CSRF 토큰
+041-5  DELETE MAPPING + CSRF 개선
+
+
+[4] 진행 로그
+-------------
+2026-11-13  JDK 25 설치, 참조 자료 분석, 001 구현(빌드 성공) -> 커밋 대기
