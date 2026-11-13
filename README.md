@@ -226,3 +226,9 @@
 - **개선점 발견** : 실패 후 입력값이 사라진다.
 - **추가한 기능** : `th:value="${writeForm.title}"`, `th:text="${writeForm.content}"`.
 - **구현 설명** : `@Valid WriteForm form` 처럼 받은 객체는 **클래스명 첫 글자 소문자(`writeForm`)** 이름으로 자동으로 모델에 담긴다. 그래서 POST 실패 화면은 잘 되지만, `GET /posts/write` 에는 `writeForm` 이 없어 `null.title` 접근으로 **에러**가 난다(의도된 실패 단계).
+
+### 014-6 writeForm?.title 사용 (GET 성공) `복습하기`
+
+- **개선점 발견** : GET 에서 `writeForm` 이 null 이라 터진다.
+- **추가한 기능** : `${writeForm?.title}`, `${writeForm?.content}`.
+- **구현 설명** : SpEL 안전 탐색 연산자 `?.` 는 앞이 null 이면 null 을 반환해 예외가 나지 않는다.
