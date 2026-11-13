@@ -452,3 +452,9 @@
 - **개선점 발견** : 상세의 "글 수정" 링크(`/posts/{id}/modify`)가 갈 곳이 없다.
 - **추가한 기능** : `ModifyForm`(WriteForm 과 같은 제약 + `@Setter`), `GET /posts/{id}/modify` → `modify.html`. 기존 제목·내용을 폼에 채워서 보여준다.
 - **구현 설명** : `@ModelAttribute("form") ModifyForm form` 으로 빈 폼 객체를 모델에 올린 뒤 `form.setTitle(post.getTitle())` 처럼 값을 채운다. 템플릿은 write.html 과 같은 구조에 글 ID·작성일·수정일 표시, 폼 에러 프래그먼트 재사용. (content 최대 100자 — 결정 사항 9)
+
+### 029-2 수정 처리 후 상세로 이동 `복습하기`
+
+- **개선점 발견** : 수정 폼을 전송해도 처리하지 않는다.
+- **추가한 기능** : `POST /posts/{id}/modify` — 유효성 실패시 수정 폼 재표시, 성공시 `Post.modify()` 후 상세로 리다이렉트.
+- **구현 설명** : `postService.modify(post, title, content)` 는 엔티티 필드만 바꾸고 `save` 를 호출하지 않는다. `@Transactional` 안에서 조회한 영속 엔티티는 트랜잭션 커밋 때 **변경 감지(dirty checking)** 로 UPDATE 가 자동 실행된다. 이때 `@LastModifiedDate` 로 수정일도 갱신된다.
