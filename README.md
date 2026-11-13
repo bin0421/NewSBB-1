@@ -166,3 +166,9 @@
 - **개선점 발견** : 기본 메세지("크기가 2에서 20 사이여야 합니다")는 서비스 문구로 어색하다.
 - **추가한 기능** : `@NotBlank(message = "제목을 입력해주세요.")`, `@Size(..., message = "...")` 처럼 메세지 지정.
 - **구현 설명** : 각 제약 어노테이션의 `message` 속성이 `getDefaultMessage()` 결과가 된다. (content 는 결정 사항 9에 따라 "2자 이상, 100자 이하")
+
+### 012-1 getFieldErrors() + 스트림으로 모든 에러 표시 `복습하기`
+
+- **개선점 발견** : 제목·내용이 모두 틀려도 에러가 하나만 보여서, 고치고 다시 보내야 다음 에러를 알 수 있다.
+- **추가한 기능** : `bindingResult.getFieldErrors()` 의 모든 메세지를 `<br>` 로 이어서 출력.
+- **구현 설명** : `stream().map(FieldError::getDefaultMessage).collect(Collectors.joining("<br>"))`. 포커스 필드는 일단 `"title"` 로 고정. 단, `getFieldErrors()` 의 순서는 보장되지 않아 새로고침마다 메세지 순서가 바뀔 수 있다.
