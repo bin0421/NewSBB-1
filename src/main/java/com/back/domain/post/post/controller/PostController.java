@@ -10,7 +10,7 @@ public class PostController {
     @ResponseBody
     public String write() {
         return """
-                <form action="/posts/doWrite">
+                <form action="doWrite">
                   <input type="text" name="title" placeholder="제목" value="안녕">
                   <br>
                   <textarea name="content" placeholder="내용">반가워.</textarea>
