@@ -508,3 +508,9 @@
 - **개선점 발견** : 댓글이 저장돼도 화면에 보이지 않는다.
 - **추가한 기능** : 상세페이지에 댓글 목록(번호, 작성일, 수정일, 내용).
 - **구현 설명** : `th:each="postComment : ${post.comments.reversed}"` — 최신 댓글이 위로. `reversed` 는 Java 21 `List.reversed()`(SequencedCollection). `comments` 는 LAZY 컬렉션이지만 `showDetail` 이 `@Transactional(readOnly = true)` 이고 OSIV(open-in-view) 기본 활성이라 뷰 렌더링 중 조회된다.
+
+### 032-1 댓글 작성 폼 `복습하기`
+
+- **개선점 발견** : 댓글을 입력할 곳이 없다.
+- **추가한 기능** : 상세페이지에 `POST /posts/{id}/comments/write` 로 전송하는 댓글 작성 폼.
+- **구현 설명** : 처리 메서드는 033 에서 만든다. 지금은 화면만.
