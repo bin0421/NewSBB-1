@@ -202,3 +202,9 @@
 - **개선점 발견** : 자바 문자열 안에 HTML을 쓰니 에디터 지원(자동완성, 하이라이트)도 없고 `%s` 순서 맞추기도 번거롭다.
 - **추가한 기능** : `templates/post/post/write.html` 템플릿을 만들고 `GET /posts/write` 는 뷰 이름 `"post/post/write"` 를 리턴.
 - **구현 설명** : `@ResponseBody` 를 떼면 리턴 문자열은 응답 본문이 아니라 **뷰 이름**이 되고, 타임리프가 `classpath:/templates/{뷰이름}.html` 을 찾아 렌더링한다. 템플릿 경로는 패키지 구조(`domain/post/post`)와 맞췄다. POST 쪽은 아직 문자열 HTML.
+
+### 014-2 getWriteFormHtml 제거, writeDone.html `복습하기`
+
+- **개선점 발견** : POST 처리 결과도 여전히 자바 문자열 HTML.
+- **추가한 기능** : `getWriteFormHtml` 삭제. 실패시 `write.html`, 성공시 `writeDone.html` 렌더링.
+- **구현 설명** : 액션 메서드에 `Model model` 을 받아 `model.addAttribute("post", post)` 로 템플릿에 값 전달. 템플릿에서는 인라인 표현식 `[[${post.id}]]` 로 출력. 실패 메세지·입력값은 아직 템플릿에 연결하지 않았다.
