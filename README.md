@@ -41,3 +41,14 @@
   - 프로필 분리 : 기본 `dev`(파일 DB `./db_dev`), 테스트는 `@ActiveProfiles("test")`로 메모리 DB `db_test`. 둘 다 `MODE=MySQL`.
   - `application.yaml` : `ddl-auto: update`, SQL 출력/포맷/바인딩 값 TRACE 로그로 JPA가 실행하는 쿼리를 눈으로 확인할 수 있게 했다. `hikari.auto-commit: false`.
   - `.gitignore` 에 `db_dev.*.db` 파일 추가.
+
+### 003 글 작성 폼 `복습하기`
+
+> 003 회차는 "폼은 단순히 URL 생성기에 불과하다"는 설명만 있는 강의라 커밋이 없다.
+
+- **개선점 발견** : 데이터는 있지만 사용자가 글을 입력할 화면이 없다.
+- **추가한 기능** : `GET /posts/write` 요청에 글 작성 폼 HTML을 응답하는 `PostController`.
+- **구현 설명**
+  - `@Controller` + `@GetMapping("/posts/write")` + `@ResponseBody` : 템플릿 없이 메서드가 리턴한 문자열을 그대로 응답 본문으로 보낸다. 자바 텍스트 블록(`"""`)으로 HTML을 작성.
+  - 폼은 "URL 생성기"일 뿐이다. 작성 버튼을 누르면 `action` 주소 뒤에 입력값이 쿼리스트링으로 붙어 `http://localhost:8080/posts/doWrite?title=안녕&content=반가워.` 로 이동한다(아직 `method` 미지정 → GET).
+  - `/posts/doWrite` 를 처리하는 메서드는 아직 없으므로 전송하면 에러 페이지가 나온다. 005에서 구현한다.
