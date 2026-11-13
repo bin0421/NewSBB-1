@@ -23,7 +23,8 @@
     </h3>
 
     <h3>내용</h3>
-    <div style="white-space: pre-line;">[[${post.content}]]</div>
+    <!-- 046-A 나아가기 : 마크다운 렌더링 -->
+    <div class="markdown" th:with="html = ${@markdown.toHtml(post.content)}" th:utext="${html}">내용</div>
 
     <hr>
 
@@ -81,7 +82,7 @@
             <h4>작성자 : <span th:text="${postComment.author?.username ?: '(알 수 없음)'}">작성자</span></h4> <!-- 042-A 나아가기 -->
             <h4>작성일 : <span th:text="${#temporals.format(postComment.createDate, 'yy.MM.dd HH:mm')}">작성일</span></h4>
             <h4>수정일 : <span th:text="${#temporals.format(postComment.modifyDate, 'yy.MM.dd HH:mm')}">수정일</span></h4>
-            <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
+            <div class="markdown" th:with="html = ${@markdown.toHtml(postComment.content)}" th:utext="${html}">댓글 내용</div> <!-- 046-A 나아가기 -->
             <!-- 044-B 나아가기 : 댓글 추천 -->
             <div>
                 추천 : <span th:text="${postComment.voters.size()}">0</span>

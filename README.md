@@ -793,3 +793,13 @@
   - 직접 `order by` 를 쓴 쿼리는 스프링 데이터가 COUNT 쿼리를 자동으로 잘 만들지 못할 수 있어 `countQuery` 를 명시했다.
   - 검색 폼에 `<input type="hidden" name="sort">` 를 넣어 정렬 상태에서 검색해도 정렬이 유지된다.
   - 테스트 `t13` : 추천 2개 → 1개 → 0개 순서, 최신순 첫 글, 화면의 현재 정렬 표시와 링크 확인.
+
+### 046-A 글·댓글 마크다운 렌더링 `나아가기`
+
+- **개선점 발견** : 내용이 평범한 텍스트로만 보여서 강조·목록·코드를 표현할 수 없다. (위키독스 3장 "마크다운" 참고)
+- **추가한 기능** : 글 본문과 댓글을 마크다운으로 렌더링(`**굵게**`, `- 목록`, `` `코드` ``, 링크 등). 엔터 한 번도 줄바꿈으로 보인다.
+- **구현 설명**
+  - 의존성 `org.commonmark:commonmark` 로 `MarkdownService` 빈(`@Component("markdown")`)을 만들고, 템플릿에서 `th:with="html = ${@markdown.toHtml(post.content)}" th:utext="${html}"` 로 쓴다(044-A 의 `@빈이름` 참조와 같은 방식). 타임리프 3.1 은 보안상 `th:utext` 안에서 빈 참조 같은 표현식을 금지하므로, 제한이 없는 `th:with` 에서 먼저 계산한 변수를 출력한다.
+  - ⚠️ `th:utext` 는 이스케이프하지 않으므로(014-4) 그대로 쓰면 XSS 위험이 있다. 렌더러에 `escapeHtml(true)` 를 줘서 사용자가 입력한 `<script>` 같은 HTML 은 글자로 출력되게 하고, `sanitizeUrls(true)` 로 `javascript:` 링크를 막았다. 마크다운이 만든 태그만 HTML 로 나간다.
+  - 026-2 의 `white-space: pre-line` 대신 `softbreak("<br>")` 로 줄바꿈을 처리한다.
+  - 테스트 `t14` : 굵게·목록·코드는 태그로, `<script>` 는 `&lt;script&gt;` 로 출력되는지 확인.

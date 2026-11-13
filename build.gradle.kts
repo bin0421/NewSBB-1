@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
 	implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
+	implementation("org.commonmark:commonmark:0.24.0") // 046-A 나아가기 : 마크다운
 	implementation("org.springframework.boot:spring-boot-h2console")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")

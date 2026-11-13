@@ -272,4 +272,18 @@ class PostControllerTest {
                 .andExpect(content().string(containsString("<strong>추천순</strong>")))
                 .andExpect(content().string(containsString("sort=vote")));
     }
+
+    @Test
+    @DisplayName("046-A 마크다운 : 굵게·목록은 HTML 로, 입력한 HTML 태그는 이스케이프")
+    void t14() throws Exception {
+        Post post = postService.write(user1(), "마크다운 글", "**굵게**\n\n- 항목\n\n<script>alert(1)</script>");
+        postService.writeComment(post, user1(), "`코드` 댓글");
+
+        mvc.perform(get("/posts/%d".formatted(post.getId())))
+                .andExpect(content().string(containsString("<strong>굵게</strong>")))
+                .andExpect(content().string(containsString("<li>항목</li>")))
+                .andExpect(content().string(containsString("&lt;script&gt;alert(1)&lt;/script&gt;")))
+                .andExpect(content().string(not(containsString("<script>alert(1)</script>"))))
+                .andExpect(content().string(containsString("<code>코드</code>")));
+    }
 }
