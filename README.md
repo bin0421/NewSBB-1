@@ -139,3 +139,12 @@
   - Bean Validation(jakarta.validation) 어노테이션으로 규칙을 선언하면 스프링이 메서드 호출 전에 검사한다.
   - `@RequestParam` 같은 단일 파라미터에 붙은 제약을 검사하려면 클래스에 `@Validated` 가 필요하다.
   - 실패하면 예외(`HandlerMethodValidationException`)가 발생해 에러 페이지가 뜬다. 폼 재표시는 일단 사라졌다 → 011에서 복구.
+
+### 010 @ModelAttribute 로 입력값을 객체로 받기, @Valid `복습하기`
+
+- **개선점 발견** : 파라미터마다 어노테이션이 3개씩 붙어 메서드 시그니처가 길다. 필드가 늘수록 더 길어진다.
+- **추가한 기능** : 폼 입력값을 담는 `WriteForm` 클래스(제약 어노테이션 포함)를 만들고 `write(@Valid WriteForm form)` 으로 한 번에 받는다.
+- **구현 설명**
+  - 단순 타입이 아닌 객체 파라미터는 `@ModelAttribute` 가 생략된 것으로 처리되어, 요청 파라미터가 같은 이름의 필드(생성자 인자)에 바인딩된다. `@AllArgsConstructor` 의 생성자로 값이 들어간다.
+  - 객체 내부 제약을 검사하려면 파라미터에 `@Valid` 를 붙인다. 이제 클래스의 `@Validated` 는 필요 없다.
+  - ⚠️ **원본과 다른 점** : 강사 코드는 여기서 content 최대 길이가 20자로 바뀌지만, NewSBB 는 009의 의도대로 **100자**를 유지한다 (NewSBB-1.txt 결정 사항 9).
