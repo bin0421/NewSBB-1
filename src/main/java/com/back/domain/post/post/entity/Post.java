@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
@@ -38,5 +39,18 @@ public class Post extends BaseEntity {
         comments.add(postComment);
 
         return postComment;
+    }
+
+    public Optional<PostComment> findCommentById(int id) {
+        return comments
+                .stream()
+                .filter(comment -> comment.getId() == id)
+                .findFirst();
+    }
+
+    public boolean deleteComment(PostComment postComment) {
+        if (postComment == null) return false;
+
+        return comments.remove(postComment);
     }
 }

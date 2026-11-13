@@ -538,3 +538,9 @@
 - **개선점 발견** : 댓글 폼을 전송해도 받을 곳이 없다.
 - **추가한 기능** : `PostCommentController` 의 `POST /posts/{postId}/comments/write`, 댓글 `WriteForm`(`@NotBlank @Size(2~100)`), `PostService.writeComment`.
 - **구현 설명** : 댓글은 글(Post)을 통해 추가한다(`post.addComment`). 트랜잭션 안에서 조회한 영속 상태의 글이므로 `PERSIST` cascade 로 커밋 때 댓글이 INSERT 된다. 프론트에서 이미 검사했으므로 서버는 `@Valid` 만 두고 실패시 400(비정상 요청으로 간주).
+
+### 034-1 댓글 삭제 (orphanRemoval 없어 실패) `복습하기`
+
+- **개선점 발견** : 잘못 쓴 댓글을 지울 수 없다.
+- **추가한 기능** : 댓글마다 수정/삭제 링크, `GET /posts/{postId}/comments/{id}/delete`, `Post.findCommentById`, `Post.deleteComment`, `PostService.deleteComment`.
+- **구현 설명** : 댓글은 글을 통해 다룬다 — 글의 `comments` 리스트에서 찾아 `remove` 한다. 의도된 실패 단계 : 컬렉션에서 빼기만 해서는 JPA 가 DELETE 를 실행하지 않는다(연관관계 주인은 `PostComment.post` 쪽이므로).
