@@ -214,3 +214,9 @@
 - **개선점 발견** : 실패해도 에러 메세지가 보이지 않는다.
 - **추가한 기능** : `model.addAttribute("errorMessage", errorMessage)` + `<ul th:text="${errorMessage}">`.
 - **구현 설명** : `th:text` 는 값을 HTML 이스케이프해 태그 내용으로 넣는다. 그래서 `<li ...>` 가 태그로 렌더링되지 않고 문자 그대로 화면에 보인다(XSS 방지가 기본).
+
+### 014-4 th:utext 는 이스케이프 안 함 `복습하기`
+
+- **개선점 발견** : `li` 태그가 글자로 보인다.
+- **추가한 기능** : `th:utext="${errorMessage}"` 로 교체.
+- **구현 설명** : `utext`(unescaped text)는 HTML 을 그대로 삽입해 렌더링한다. 서버가 만든 신뢰할 수 있는 HTML 에만 쓰고, 사용자 입력에는 쓰지 않는다.
