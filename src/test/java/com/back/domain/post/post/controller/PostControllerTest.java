@@ -71,4 +71,34 @@ class PostControllerTest {
         mvc.perform(post("/posts/999999/delete"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    @DisplayName("036-A 목록에 댓글 수 표시")
+    void t4() throws Exception {
+        Post post = postService.write("댓글 수 글", "댓글 수 내용");
+        postService.writeComment(post, "댓글 A");
+        postService.writeComment(post, "댓글 B");
+        postService.writeComment(post, "댓글 C");
+        postService.writeComment(post, "댓글 D"); // 샘플 데이터(3개, 2개)와 겹치지 않게 4개
+
+        mvc.perform(get("/posts"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[4]")));
+    }
+
+    @Test
+    @DisplayName("036-B 없는 댓글 : 수정 폼/수정/삭제 요청 모두 404")
+    void t5() throws Exception {
+        Post post = postService.write("댓글 404 글", "댓글 404 내용");
+        String base = "/posts/%d/comments/999999".formatted(post.getId());
+
+        mvc.perform(get(base + "/modify"))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(post(base + "/modify").param("_method", "PUT").param("content", "수정 내용"))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(get(base + "/delete"))
+                .andExpect(status().isNotFound());
+    }
 }

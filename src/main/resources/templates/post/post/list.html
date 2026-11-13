@@ -5,6 +5,8 @@
 <ul>
     <li th:each="post : ${posts}">
         <a th:href="@{/posts/{id}(id=${post.id})}" th:text="|${post.id} : ${post.title}|">글 제목</a>
+        <!-- 036-A 나아가기 : 댓글 수 -->
+        <span th:unless="${post.comments.isEmpty()}" style="color: red;" th:text="|[${post.comments.size()}]|">[댓글 수]</span>
         <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}">작성일</span>
     </li>
 </ul>

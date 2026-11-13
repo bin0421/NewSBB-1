@@ -580,3 +580,20 @@
 - **개선점 발견** : 댓글의 "수정" 링크가 갈 곳이 없다.
 - **추가한 기능** : `GET /posts/{postId}/comments/{id}/modify` → `post/postComment/modify.html`(글·댓글 정보 + 수정 textarea), `POST` 같은 주소로 수정 처리. `PostComment.modify`, `PostService.modifyComment`, 댓글 `ModifyForm`.
 - **구현 설명** : 글 수정과 같은 흐름. 수정은 변경 감지로 UPDATE 되고, 처리 후 글 상세로 리다이렉트.
+
+### 036-2 댓글 수정 폼 유효성 스크립트 `복습하기`
+
+> 이 일지는 036-2 커밋에서 누락되어 036-A 커밋에 함께 추가했다.
+
+- **개선점 발견** : 댓글 수정 폼에는 작성 폼(032-4) 같은 프론트 검사가 없다.
+- **추가한 기능** : `PostComment__submitModifyForm(form)` — trim, 빈 값/2자 미만 검사 후 `form.submit()`.
+- **구현 설명** : 032 의 작성 폼과 동일한 패턴(`onsubmit="...; return false;"`).
+
+### 036-A 목록에 댓글 수 표시 `나아가기`
+
+- **개선점 발견** : 목록에서는 어떤 글에 댓글이 달렸는지 알 수 없다. ([위키독스 3-10](https://wikidocs.net/161307) 답변 개수 표시 참고)
+- **추가한 기능** : 글 목록 제목 옆에 댓글 수 `[3]` (댓글이 없으면 표시하지 않음).
+- **구현 설명**
+  - `th:unless="${post.comments.isEmpty()}"`, `th:text="|[${post.comments.size()}]|"`.
+  - `comments` 는 LAZY 컬렉션이라 글마다 댓글 조회 쿼리가 따로 나가는 **N+1 문제**가 생긴다. `hibernate.default_batch_fetch_size: 100` 을 설정해 한 페이지 글들의 댓글을 `IN (...)` 쿼리 한 번으로 모아서 가져오게 했다.
+  - 테스트 `t4` : 댓글 4개 단 글이 목록에 `[4]` 로 보이는지 확인.
