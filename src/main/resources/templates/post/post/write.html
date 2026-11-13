@@ -1,7 +1,7 @@
 <h1 th:text="${siteName}"></h1>
 
-<ul style="color: red;" th:utext="${errorMessage}">
-
+<ul style="color: red;">
+    <th:block th:utext="${errorMessage}"></th:block>
 </ul>
 
 <form method="POST" action="doWrite">

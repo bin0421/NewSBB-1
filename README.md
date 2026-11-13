@@ -260,3 +260,9 @@
 - **개선점 발견** : 모든 페이지에 공통으로 보일 사이트 이름을 액션 메서드마다 `model.addAttribute` 하기는 번거롭다.
 - **추가한 기능** : 컨트롤러에 `@ModelAttribute("siteName")` 메서드를 두고, `write.html`/`writeDone.html` 상단에 `<h1 th:text="${siteName}">`. 템플릿의 `writeForm` 은 `form` 으로 변경.
 - **구현 설명** : 메서드에 붙은 `@ModelAttribute` 는 **그 컨트롤러의 모든 액션 메서드 실행 전에** 호출되어 리턴값이 모델에 담긴다. 모든 컨트롤러에 적용하려면 `@ControllerAdvice` 클래스에 두면 된다.
+
+### 017 th:block `복습하기`
+
+- **개선점 발견** : `<ul th:utext>` 는 `ul` 의 내용 전체를 덮어써서, `ul` 안에 다른 요소를 함께 둘 수 없다.
+- **추가한 기능** : `<ul>` 안에 `<th:block th:utext="${errorMessage}"></th:block>`.
+- **구현 설명** : `th:block` 은 렌더링 후 자기 자신은 사라지고 결과(자식)만 남는 타임리프 전용 가상 태그. 반복·조건 처리에 래퍼 태그 없이 쓸 때 유용하다.
