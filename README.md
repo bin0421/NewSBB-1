@@ -64,3 +64,13 @@
 - **개선점 발견** : 폼 페이지(`/posts/write`)와 action(`/posts/doWrite`)은 `/posts/` 까지 같다.
 - **추가한 기능** : `action="doWrite"` 로 변경.
 - **구현 설명** : `/` 없이 시작하는 상대 경로는 현재 주소의 마지막 `/` 뒤만 바꾼다. `/posts/write` 에서 `doWrite` 는 `/posts/doWrite` 가 된다.
+
+### 005 /posts/doWrite 액션 메서드로 글 작성 `복습하기`
+
+- **개선점 발견** : 폼을 전송해도 받아서 처리하는 곳이 없다.
+- **추가한 기능** : `GET /posts/doWrite` 를 처리해 글을 저장하고 "N번 글이 생성되었습니다." 를 응답.
+- **구현 설명**
+  - `@RequiredArgsConstructor` + `private final PostService` 로 생성자 주입.
+  - 폼을 보여주는 메서드는 `showWrite`, 처리하는 메서드는 `write` 로 이름을 구분.
+  - `@RequestParam(defaultValue = "")` : 쿼리스트링의 `title`, `content` 를 받는다. 값이 없어도 에러 대신 빈 문자열.
+  - `@Transactional` 을 붙여 저장을 하나의 트랜잭션으로 처리(`auto-commit: false` 설정이므로 필요).
