@@ -74,3 +74,11 @@
   - 폼을 보여주는 메서드는 `showWrite`, 처리하는 메서드는 `write` 로 이름을 구분.
   - `@RequestParam(defaultValue = "")` : 쿼리스트링의 `title`, `content` 를 받는다. 값이 없어도 에러 대신 빈 문자열.
   - `@Transactional` 을 붙여 저장을 하나의 트랜잭션으로 처리(`auto-commit: false` 설정이므로 필요).
+
+### 006 폼 전송은 GET 이 아니라 POST `복습하기`
+
+- **개선점 발견** : GET으로 전송하면 입력값이 주소창에 그대로 남고, 새로고침·북마크로 글이 또 생성될 수 있다. GET은 조회용이다.
+- **추가한 기능** : 폼에 `method="POST"`, 처리 메서드는 `@PostMapping("/posts/doWrite")`.
+- **구현 설명** : POST는 입력값을 요청 본문(body)에 담아 보낸다. 생성·수정·삭제처럼 서버 상태를 바꾸는 요청은 POST를 쓴다. 이제 주소창에 `/posts/doWrite` 를 직접 입력(GET)하면 405 Method Not Allowed.
+
+> 008 회차는 멱등성 설명만 있는 강의라 커밋이 없다. (GET/PUT/DELETE 는 여러 번 해도 결과가 같은 멱등, POST 는 비멱등. 실무에서 꼭 지킬 필요는 없고 참고만.)
