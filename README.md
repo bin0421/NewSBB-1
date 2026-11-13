@@ -246,3 +246,11 @@
 - **구현 설명** : 검사 없이 바인딩만 해서 빈 `writeForm` 이 모델에 담기므로 GET 이 정상 작동. 이렇게 하면 `/posts/write?title=abc` 처럼 초기값을 쿼리로 넣을 수도 있다.
 
 > 017 회차는 커밋이 없다.
+
+### 015 타임리프 캐시 끄기, @ModelAttribute("form") `복습하기`
+
+- **개선점 발견** : 템플릿을 고칠 때마다 서버를 재시작해야 반영된다. 또 `writeForm` 이라는 모델 이름이 길고 클래스명에 묶여 있다.
+- **추가한 기능**
+  - `application-dev.yaml` : `spring.thymeleaf.cache: false`, `prefix: file:src/main/resources/templates/`.
+  - 파라미터에 `@ModelAttribute("form")` 을 붙여 모델 이름을 `form` 으로 지정.
+- **구현 설명** : prefix 를 `file:` 소스 폴더로 바꾸면 빌드 결과물(classpath)이 아니라 원본 파일을 바로 읽으므로, 캐시를 끈 상태에서 새로고침만으로 수정이 반영된다(dev 프로필 한정).
