@@ -526,3 +526,9 @@
 - **개선점 발견** : 전송을 막았으니 대신 실행될 함수가 필요하다.
 - **추가한 기능** : `onsubmit="PostComment__submitWriteForm(this); return false;"`, 함수는 우선 `form.content.value` 의 앞뒤 공백 제거.
 - **구현 설명** : `this` 는 폼 엘리먼트. `form.content` 처럼 name 으로 필드에 접근한다. 함수 이름의 `도메인__동작` 접두어는 전역 함수 이름 충돌을 피하는 관례.
+
+### 032-4 프론트 유효성 체크 후 form.submit() `복습하기`
+
+- **개선점 발견** : 함수가 검사만 하고 전송은 하지 않는다.
+- **추가한 기능** : 비었거나 2자 미만이면 `alert` + 포커스 후 중단, 통과하면 `form.submit()`. textarea 에 `maxlength="100"`.
+- **구현 설명** : `form.submit()` 은 `onsubmit` 을 다시 발생시키지 않고 바로 전송한다. 최대 길이는 `maxlength` 속성이 입력 자체를 막는다. 프론트 검사는 UX 용이고 서버 검사도 반드시 있어야 한다(033).

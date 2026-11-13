@@ -17,6 +17,22 @@
 <script>
     function PostComment__submitWriteForm(form) {
         form.content.value = form.content.value.trim();
+
+        if (form.content.value.length === 0) {
+            alert("댓글 내용을 입력해주세요.");
+            form.content.focus();
+
+            return;
+        }
+
+        if (form.content.value.length < 2) {
+            alert("댓글 내용을 2자 이상 입력해주세요.");
+            form.content.focus();
+
+            return;
+        }
+
+        form.submit();
     }
 </script>
 
@@ -27,7 +43,7 @@
 >
     <div>
         <label for="content">내용</label>
-        <textarea id="content" name="content" rows="5" cols="50"></textarea>
+        <textarea id="content" name="content" rows="5" cols="50" maxlength="100"></textarea>
     </div>
     <div>
         <button type="submit">작성</button>
