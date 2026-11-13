@@ -12,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PROTECTED;
 
 @MappedSuperclass // 엔티티의 부모 클래스에는 이걸 달아야 한다.
 @EntityListeners(AuditingEntityListener.class)
@@ -20,8 +22,12 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private int id;
+
     @CreatedDate
+    @Getter(PRIVATE)
     private LocalDateTime createDate;
+
     @LastModifiedDate
+    @Getter(PROTECTED)
     private LocalDateTime modifyDate;
 }

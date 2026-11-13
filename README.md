@@ -422,3 +422,9 @@
 - **개선점 발견** : 상세의 "글 목록" 링크가 갈 곳이 없다.
 - **추가한 기능** : `GET /posts` 가 `List<Post>` 를 `@ResponseBody` 로 리턴, `GET /posts/` 는 `/posts` 로 리다이렉트. `PostService.findAll`.
 - **구현 설명** : `@ResponseBody` 메서드가 객체를 리턴하면 `HttpMessageConverter`(Jackson)가 JSON 으로 변환한다. 이 JSON 을 프론트(fetch)에서 받아 그리면 클라이언트 사이드 렌더링이 된다. 끝 `/` 유무가 다른 URL 이므로 리다이렉트로 통일.
+
+### 027-1 필드별 getter 접근 레벨 조절 `복습하기`
+
+- **개선점 발견** : JSON 에 어떤 필드가 나가는지 조절할 수 있을까?
+- **추가한 기능** : `createDate` 에 `@Getter(PRIVATE)`, `modifyDate` 에 `@Getter(PROTECTED)`.
+- **구현 설명** : Jackson 은 public 필드 또는 public getter 가 있는 속성만 직렬화한다. 그래서 두 날짜가 JSON 에서 빠진다. `protected` 는 같은 패키지+자식만, `public` 은 어디서나 접근 가능.
