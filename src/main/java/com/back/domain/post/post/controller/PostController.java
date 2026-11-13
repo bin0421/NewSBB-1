@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -73,8 +74,13 @@ public class PostController {
     @ResponseBody
     @Transactional
     public String write(
-            @Valid WriteForm form
+            @Valid WriteForm form,
+            BindingResult bindingResult
     ) {
+        if (bindingResult.hasErrors()) {
+            return getWriteFormHtml();
+        }
+
         Post post = postService.write(form.getTitle(), form.getContent());
 
         return "%d번 글이 생성되었습니다.".formatted(post.getId());
