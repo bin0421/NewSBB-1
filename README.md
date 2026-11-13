@@ -532,3 +532,9 @@
 - **개선점 발견** : 함수가 검사만 하고 전송은 하지 않는다.
 - **추가한 기능** : 비었거나 2자 미만이면 `alert` + 포커스 후 중단, 통과하면 `form.submit()`. textarea 에 `maxlength="100"`.
 - **구현 설명** : `form.submit()` 은 `onsubmit` 을 다시 발생시키지 않고 바로 전송한다. 최대 길이는 `maxlength` 속성이 입력 자체를 막는다. 프론트 검사는 UX 용이고 서버 검사도 반드시 있어야 한다(033).
+
+### 033 댓글 작성 처리 `복습하기`
+
+- **개선점 발견** : 댓글 폼을 전송해도 받을 곳이 없다.
+- **추가한 기능** : `PostCommentController` 의 `POST /posts/{postId}/comments/write`, 댓글 `WriteForm`(`@NotBlank @Size(2~100)`), `PostService.writeComment`.
+- **구현 설명** : 댓글은 글(Post)을 통해 추가한다(`post.addComment`). 트랜잭션 안에서 조회한 영속 상태의 글이므로 `PERSIST` cascade 로 커밋 때 댓글이 INSERT 된다. 프론트에서 이미 검사했으므로 서버는 `@Valid` 만 두고 실패시 400(비정상 요청으로 간주).
