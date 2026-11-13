@@ -398,3 +398,9 @@
 - **개선점 발견** : 작성한 글을 볼 방법이 없다. 작성 후 다시 빈 폼으로 돌아간다.
 - **추가한 기능** : `GET /posts/{id}` → `detail.html`, 작성 후 `redirect:/posts/{새 글 id}`. `PostService.findById`.
 - **구현 설명** : `@PathVariable int id` 로 URL 경로의 값을 받는다. 조회 전용 메서드에는 `@Transactional(readOnly = true)` 로 변경 감지 등 불필요한 작업을 줄인다. `findById` 는 `Optional` 을 리턴하므로 일단 `.get()`.
+
+### 026-2 white-space: pre-line `복습하기`
+
+- **개선점 발견** : 내용에 입력한 줄바꿈이 상세페이지에서 한 줄로 붙어 보인다.
+- **추가한 기능** : 내용 `div` 에 `style="white-space: pre-line;"`.
+- **구현 설명** : HTML 은 줄바꿈 문자를 공백으로 취급한다. `pre-line` 은 줄바꿈은 살리고 연속 공백은 하나로 합친다. (`<br>` 로 치환해 `utext` 를 쓰는 것보다 XSS 에 안전)
