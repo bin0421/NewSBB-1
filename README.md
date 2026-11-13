@@ -636,3 +636,9 @@
 - **추가한 기능** : `@DeleteMapping("/posts/{postId}/comments/{id}/delete")`, 삭제 링크에 `method="DELETE"` 속성.
 - **구현 설명** : 039-1 의 `global.js` 가 `a[method]` 클릭을 가로채 `_method=DELETE` 를 담은 POST 폼으로 전송하고, `HiddenHttpMethodFilter` 가 DELETE 로 바꿔 매핑한다. confirm 은 `data-onclick` 으로 옮겨져 먼저 실행된다.
   - 나아가기 테스트 `t5`(036-B) 의 댓글 삭제 요청도 `POST + _method=DELETE` 로 맞췄다. (GET 으로 보내면 이제 405)
+
+### 039-3 detail.html 들여쓰기 정리 `복습하기`
+
+- **개선점 발견** : 039-1 에서 `layout:fragment` 로 감싼 뒤 `detail.html` 내용의 들여쓰기가 감싼 구조와 맞지 않아 읽기 어렵다.
+- **추가한 기능** : `detail.html` 전체를 fragment 안쪽으로 한 단계 들여쓰기 (기능 변화 없음).
+- **구현 설명** : 강의 페이지에는 039-2 와 같은 제목("댓글 삭제에 DELETE MAPPING 도입")으로 올라와 있지만, 실제 변경은 공백뿐이다(`git diff -w` 결과 없음). 나아가기의 글 삭제 폼도 같은 깊이로 맞췄다.

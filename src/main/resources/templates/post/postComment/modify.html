@@ -1,82 +1,82 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
 
-<script>
-    function PostComment__submitModifyForm(form) {
-        form.content.value = form.content.value.trim();
+    <script>
+        function PostComment__submitModifyForm(form) {
+            form.content.value = form.content.value.trim();
 
-        if (form.content.value.length === 0) {
-            alert("댓글 내용을 입력해주세요.");
-            form.content.focus();
-            return;
+            if (form.content.value.length === 0) {
+                alert("댓글 내용을 입력해주세요.");
+                form.content.focus();
+                return;
+            }
+
+            if (form.content.value.length < 2) {
+                alert("댓글 내용을 2자 이상 입력해주세요.");
+                form.content.focus();
+                return;
+            }
+
+            form.submit();
         }
+    </script>
 
-        if (form.content.value.length < 2) {
-            alert("댓글 내용을 2자 이상 입력해주세요.");
-            form.content.focus();
-            return;
-        }
+    <form method="POST" onsubmit="PostComment__submitModifyForm(this); return false;">
+        <input type="hidden" name="_method" value="PUT">
 
-        form.submit();
-    }
-</script>
+        <div>
+            <label><strong>글 ID</strong></label><br>
+            <span th:text="${post.id}"></span>
+            <hr>
+        </div>
 
-<form method="POST" onsubmit="PostComment__submitModifyForm(this); return false;">
-    <input type="hidden" name="_method" value="PUT">
+        <div>
+            <label><strong>글 제목</strong></label><br>
+            <span th:text="${post.title}"></span>
+            <hr>
+        </div>
+
+        <div>
+            <label><strong>댓글 ID</strong></label><br>
+            <span th:text="${postComment.id}"></span>
+            <hr>
+        </div>
+
+        <div>
+            <label><strong>댓글 작성일</strong></label><br>
+            <span th:text="${#temporals.format(postComment.createDate, 'yy.MM.dd HH:mm')}"></span>
+            <hr>
+        </div>
+
+        <div>
+            <label><strong>댓글 수정일</strong></label><br>
+            <span th:text="${#temporals.format(postComment.modifyDate, 'yy.MM.dd HH:mm')}"></span>
+            <hr>
+        </div>
+
+        <div>
+            <label><strong>댓글 내용</strong></label><br>
+            <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
+            <hr>
+        </div>
+
+        <div>
+            <label for="content"><strong>내용</strong></label><br>
+            <textarea id="content" name="content"
+                      placeholder="내용"
+                      maxlength="100"
+                      autofocus
+                      th:text="${postComment.content}"></textarea>
+            <hr>
+        </div>
+
+        <input type="submit" value="댓글 수정">
+    </form>
 
     <div>
-        <label><strong>글 ID</strong></label><br>
-        <span th:text="${post.id}"></span>
-        <hr>
+        <a th:href="@{/posts/{id}(id=${post.id})}">글 상세페이지</a>
+        <a href="/posts">글 목록</a>
     </div>
-
-    <div>
-        <label><strong>글 제목</strong></label><br>
-        <span th:text="${post.title}"></span>
-        <hr>
-    </div>
-
-    <div>
-        <label><strong>댓글 ID</strong></label><br>
-        <span th:text="${postComment.id}"></span>
-        <hr>
-    </div>
-
-    <div>
-        <label><strong>댓글 작성일</strong></label><br>
-        <span th:text="${#temporals.format(postComment.createDate, 'yy.MM.dd HH:mm')}"></span>
-        <hr>
-    </div>
-
-    <div>
-        <label><strong>댓글 수정일</strong></label><br>
-        <span th:text="${#temporals.format(postComment.modifyDate, 'yy.MM.dd HH:mm')}"></span>
-        <hr>
-    </div>
-
-    <div>
-        <label><strong>댓글 내용</strong></label><br>
-        <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
-        <hr>
-    </div>
-
-    <div>
-        <label for="content"><strong>내용</strong></label><br>
-        <textarea id="content" name="content"
-                  placeholder="내용"
-                  maxlength="100"
-                  autofocus
-                  th:text="${postComment.content}"></textarea>
-        <hr>
-    </div>
-
-    <input type="submit" value="댓글 수정">
-</form>
-
-<div>
-    <a th:href="@{/posts/{id}(id=${post.id})}">글 상세페이지</a>
-    <a href="/posts">글 목록</a>
-</div>
 
 </div>
 </html>

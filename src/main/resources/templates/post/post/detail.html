@@ -1,91 +1,91 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
 
-<h2>번호 : [[${post.id}]]</h2>
+    <h2>번호 : [[${post.id}]]</h2>
 
-<h2>제목 : [[${post.title}]]</h2>
+    <h2>제목 : [[${post.title}]]</h2>
 
-<h3>작성일 : <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}">작성일</span></h3>
-<h3>수정일 : <span th:text="${#temporals.format(post.modifyDate, 'yy.MM.dd HH:mm')}">수성일</span></h3>
+    <h3>작성일 : <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}">작성일</span></h3>
+    <h3>수정일 : <span th:text="${#temporals.format(post.modifyDate, 'yy.MM.dd HH:mm')}">수성일</span></h3>
 
-<h3>내용</h3>
-<div style="white-space: pre-line;">[[${post.content}]]</div>
+    <h3>내용</h3>
+    <div style="white-space: pre-line;">[[${post.content}]]</div>
 
-<hr>
+    <hr>
 
-<h2>댓글 작성</h2>
+    <h2>댓글 작성</h2>
 
-<script>
-    function PostComment__submitWriteForm(form) {
-        form.content.value = form.content.value.trim();
+    <script>
+        function PostComment__submitWriteForm(form) {
+            form.content.value = form.content.value.trim();
 
-        if (form.content.value.length === 0) {
-            alert("댓글 내용을 입력해주세요.");
-            form.content.focus();
+            if (form.content.value.length === 0) {
+                alert("댓글 내용을 입력해주세요.");
+                form.content.focus();
 
-            return;
+                return;
+            }
+
+            if (form.content.value.length < 2) {
+                alert("댓글 내용을 2자 이상 입력해주세요.");
+                form.content.focus();
+
+                return;
+            }
+
+            form.submit();
         }
+    </script>
 
-        if (form.content.value.length < 2) {
-            alert("댓글 내용을 2자 이상 입력해주세요.");
-            form.content.focus();
-
-            return;
-        }
-
-        form.submit();
-    }
-</script>
-
-<form
-        method="POST"
-        th:action="@{/posts/{id}/comments/write(id=${post.id})}"
-        onsubmit="PostComment__submitWriteForm(this); return false;"
->
-    <div>
-        <label for="content">내용</label>
-        <textarea id="content" name="content" rows="5" cols="50" maxlength="100"></textarea>
-    </div>
-    <div>
-        <button type="submit">작성</button>
-    </div>
-</form>
-
-<hr>
-
-<h2>댓글</h2>
-
-<ul>
-    <li th:each="postComment : ${post.comments.reversed}">
-        <h3>번호 : <span th:text="${postComment.id}">댓글 번호</span></h3>
-        <h4>작성일 : <span th:text="${#temporals.format(postComment.createDate, 'yy.MM.dd HH:mm')}">작성일</span></h4>
-        <h4>수정일 : <span th:text="${#temporals.format(postComment.modifyDate, 'yy.MM.dd HH:mm')}">수정일</span></h4>
-        <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
+    <form
+            method="POST"
+            th:action="@{/posts/{id}/comments/write(id=${post.id})}"
+            onsubmit="PostComment__submitWriteForm(this); return false;"
+    >
         <div>
-            <a th:href="@{/posts/{id}/comments/{commentId}/modify(id=${post.id}, commentId=${postComment.id})}">수정</a>
-            <a
-                    method="DELETE"
-                    th:href="@{/posts/{id}/comments/{commentId}/delete(id=${post.id}, commentId=${postComment.id})}"
-                    onclick="return confirm('정말 삭제하시겠습니까?');"
-            >
-                삭제
-            </a>
+            <label for="content">내용</label>
+            <textarea id="content" name="content" rows="5" cols="50" maxlength="100"></textarea>
         </div>
-        <hr>
-    </li>
-</ul>
+        <div>
+            <button type="submit">작성</button>
+        </div>
+    </form>
 
-<div>
-    <a href=".">글 목록</a>
-    <a href="write">글 쓰기</a>
-    <a th:href="@{{id}/modify(id=${post.id})}">글 수정</a>
-</div>
+    <hr>
 
-<!-- 029-A 나아가기 : 글 삭제 -->
-<form method="POST" th:action="@{/posts/{id}/delete(id=${post.id})}"
-      onsubmit="return confirm('정말 삭제하시겠습니까?');">
-    <button type="submit">글 삭제</button>
-</form>
+    <h2>댓글</h2>
+
+    <ul>
+        <li th:each="postComment : ${post.comments.reversed}">
+            <h3>번호 : <span th:text="${postComment.id}">댓글 번호</span></h3>
+            <h4>작성일 : <span th:text="${#temporals.format(postComment.createDate, 'yy.MM.dd HH:mm')}">작성일</span></h4>
+            <h4>수정일 : <span th:text="${#temporals.format(postComment.modifyDate, 'yy.MM.dd HH:mm')}">수정일</span></h4>
+            <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
+            <div>
+                <a th:href="@{/posts/{id}/comments/{commentId}/modify(id=${post.id}, commentId=${postComment.id})}">수정</a>
+                <a
+                        method="DELETE"
+                        th:href="@{/posts/{id}/comments/{commentId}/delete(id=${post.id}, commentId=${postComment.id})}"
+                        onclick="return confirm('정말 삭제하시겠습니까?');"
+                >
+                    삭제
+                </a>
+            </div>
+            <hr>
+        </li>
+    </ul>
+
+    <div>
+        <a href=".">글 목록</a>
+        <a href="write">글 쓰기</a>
+        <a th:href="@{{id}/modify(id=${post.id})}">글 수정</a>
+    </div>
+
+    <!-- 029-A 나아가기 : 글 삭제 -->
+    <form method="POST" th:action="@{/posts/{id}/delete(id=${post.id})}"
+          onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        <button type="submit">글 삭제</button>
+    </form>
 
 </div>
 </html>

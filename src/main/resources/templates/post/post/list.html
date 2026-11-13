@@ -1,8 +1,9 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
 
-<h2>글 목록</h2>
+    <h2>글 목록</h2>
 
+<<<<<<< ours
 <ul>
     <li th:each="post : ${posts}">
         <a th:href="@{/posts/{id}(id=${post.id})}" th:text="|${post.id} : ${post.title}|">글 제목</a>
@@ -11,10 +12,18 @@
         <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}">작성일</span>
     </li>
 </ul>
+=======
+    <ul>
+        <li th:each="post : ${posts}">
+            <a th:href="@{/posts/{id}(id=${post.id})}" th:text="|${post.id} : ${post.title}|">글 제목</a>
+            <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}">작성일</span>
+        </li>
+    </ul>
+>>>>>>> theirs
 
-<div>
-    <a href="posts/write">글 쓰기</a>
-</div>
+    <div>
+        <a href="posts/write">글 쓰기</a>
+    </div>
 
 <!-- 029-B 나아가기 : 페이징 (현재 페이지 기준 앞뒤 4페이지까지 표시) -->
 <div th:if="${posts.totalPages > 1}"
