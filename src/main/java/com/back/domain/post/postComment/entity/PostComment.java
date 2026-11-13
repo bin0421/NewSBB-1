@@ -1,5 +1,6 @@
 package com.back.domain.post.postComment.entity;
 
+import com.back.domain.member.member.entity.Member;
 import com.back.domain.post.post.entity.Post;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Entity;
@@ -15,9 +16,12 @@ import static jakarta.persistence.FetchType.LAZY;
 public class PostComment extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Post post; // POST_ID
+    @ManyToOne(fetch = LAZY)
+    private Member author; // 042-A 나아가기 : 작성자
     private String content;
 
-    public PostComment(Post post, String content) {
+    public PostComment(Post post, Member author, String content) {
+        this.author = author;
         this.post = post;
         this.content = content;
     }

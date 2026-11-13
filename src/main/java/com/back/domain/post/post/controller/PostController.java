@@ -2,6 +2,7 @@ package com.back.domain.post.post.controller;
 
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
+import com.back.global.rq.Rq;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final Rq rq;
 
 
     public record ModifyForm(
@@ -87,7 +89,7 @@ public class PostController {
     ) {
         if (bindingResult.hasErrors()) return "post/post/write";
 
-        Post post = postService.write(form.title, form.content);
+        Post post = postService.write(rq.getActor(), form.title, form.content); // 042-A : 작성자 저장
 
         return "redirect:/posts/" + post.getId();
     }

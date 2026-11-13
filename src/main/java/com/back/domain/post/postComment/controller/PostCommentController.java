@@ -3,6 +3,7 @@ package com.back.domain.post.postComment.controller;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import com.back.domain.post.postComment.entity.PostComment;
+import com.back.global.rq.Rq;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostCommentController {
     private final PostService postService;
+    private final Rq rq;
 
 
     public record ModifyForm(
@@ -72,7 +74,7 @@ public class PostCommentController {
     ) {
         Post post = postService.findById(postId).get();
 
-        postService.writeComment(post, writeForm.content);
+        postService.writeComment(post, rq.getActor(), writeForm.content); // 042-A : 작성자 저장
 
         return "redirect:/posts/" + postId;
     }

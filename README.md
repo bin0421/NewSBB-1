@@ -713,3 +713,14 @@
   - 로그아웃은 CSRF 보호 때문에 POST 로만 동작한다 → 헤더에 `th:action` 폼 버튼(토큰 자동 삽입).
   - `GlobalModelAttributes`(`@ControllerAdvice`) 의 `@ModelAttribute("currentUsername")` : 016 에서 배운 공통 변수를 **모든 컨트롤러**에 적용. 파라미터 `Principal` 로 로그인 사용자를 받는다.
   - 테스트 : `formLogin()` 으로 로그인 성공/실패, `user("user1")` 요청 후처리기로 헤더 메뉴 확인.
+
+### 042-A 글·댓글 작성자 저장/표시 `나아가기`
+
+- **개선점 발견** : 로그인은 되지만 누가 쓴 글·댓글인지 남지 않는다. (위키독스 3장 "엔티티 변경 / 글쓴이 표시" 참고)
+- **추가한 기능** : `Post.author`, `PostComment.author`(`@ManyToOne(fetch = LAZY) Member`). 글·댓글 작성시 로그인 회원을 작성자로 저장하고, 목록·상세·댓글에 작성자 아이디를 표시한다. 샘플 글·댓글에도 user1, user2 를 작성자로 넣었다.
+- **구현 설명**
+  - `Rq`(`@RequestScope` 빈) : `SecurityContextHolder` 의 인증 정보로 현재 회원(actor)을 조회해 돌려준다. 요청마다 새로 만들어지는 빈이라 한 요청 안에서는 조회 결과를 재사용한다. 컨트롤러는 `rq.getActor()` 만 호출하면 된다.
+  - 생성자/서비스 시그니처를 `write(author, title, content)`, `writeComment(post, author, content)`, `addComment(author, content)` 로 바꿨다.
+  - 기존 DB 의 글에는 작성자가 없으므로(`ddl-auto: update` 로 `author_id` 컬럼만 추가됨) 템플릿에서 `${post.author?.username ?: '(알 수 없음)'}` 처럼 안전 탐색(`?.`)과 엘비스(`?:`) 연산자로 처리한다.
+  - 샘플 데이터는 회원(`work2`)을 먼저 만든 뒤 글(`work1`)을 만들도록 순서를 바꿨다.
+  - 테스트 `t6` : `user1` 로 글·댓글 작성 후 작성자 저장과 상세페이지 표시 확인. 기존 테스트도 `@WithMockUser(username = "user1")` 로 실제 샘플 회원을 쓰게 했다.
