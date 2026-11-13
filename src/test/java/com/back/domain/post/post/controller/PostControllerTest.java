@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -179,5 +180,27 @@ class PostControllerTest {
 
         assertThat(post.getTitle()).isEqualTo("user2 의 글");
         assertThat(postService.findById(post.getId())).isPresent();
+    }
+
+    @Test
+    @DisplayName("043-B 버튼 : 작성자 본인에게만 글·댓글 수정/삭제 버튼이 보인다")
+    void t9() throws Exception {
+        Member user2 = memberService.findByUsername("user2").get();
+
+        Post myPost = postService.write(user1(), "내 글", "내 내용");
+        postService.writeComment(myPost, user2, "남의 댓글");
+
+        mvc.perform(get("/posts/%d".formatted(myPost.getId())))
+                .andExpect(content().string(containsString(">글 수정</a>")))
+                .andExpect(content().string(containsString(">글 삭제</button>")))
+                .andExpect(content().string(not(containsString("comments/%d/modify".formatted(myPost.getComments().getFirst().getId())))));
+
+        Post otherPost = postService.write(user2, "남의 글", "남의 내용");
+        postService.writeComment(otherPost, user1(), "내 댓글");
+
+        mvc.perform(get("/posts/%d".formatted(otherPost.getId())))
+                .andExpect(content().string(not(containsString(">글 수정</a>"))))
+                .andExpect(content().string(not(containsString(">글 삭제</button>"))))
+                .andExpect(content().string(containsString("comments/%d/modify".formatted(otherPost.getComments().getFirst().getId()))));
     }
 }

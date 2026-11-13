@@ -745,3 +745,13 @@
   - 시큐리티 규칙에 `/posts/*/modify`, `/posts/*/delete`, 댓글 수정·삭제 주소를 `authenticated()` 로 추가. 비로그인은 로그인 페이지로, 로그인했지만 남의 것이면 403.
   - `PostService.writeComment` 는 `postRepository.flush()` 로 댓글 INSERT 를 즉시 실행해 생성된 id 를 바로 쓸 수 있게 했다(cascade 저장은 원래 커밋 시점에 일어나 그전엔 id 가 0).
   - 테스트 `t8` : user2 의 글·댓글에 user1 이 수정 폼·수정·삭제를 요청하면 모두 403 이고 데이터는 그대로인지 확인.
+
+### 043-B 본인일 때만 수정·삭제 버튼 표시 `나아가기`
+
+- **개선점 발견** : 043-A 로 남의 글은 수정·삭제가 막히지만, 버튼은 누구에게나 보여서 눌러야 403 을 만난다.
+- **추가한 기능** : 상세페이지의 "글 수정 / 글 삭제" 버튼과 댓글의 "수정 / 삭제" 링크를 작성자 본인에게만 보여준다.
+- **구현 설명**
+  - `layout:fragment` 엘리먼트에 `th:with="isPostAuthor = ${currentUsername != null and post.author?.username == currentUsername}"` 로 한 번 계산해 두고 `th:if="${isPostAuthor}"` 로 사용. 댓글은 반복문 안에서 댓글마다 같은 조건을 쓴다.
+  - `currentUsername != null` 조건이 꼭 필요하다 : 비로그인(`null`)과 작성자 없는 옛 글(`author?.username` 도 `null`)이 만나면 `null == null` 이 참이 되기 때문.
+  - 화면에서 버튼을 숨기는 것은 편의일 뿐이고, 실제 보안은 043-A 의 서버 검사가 담당한다.
+  - 테스트 `t9` : 내 글에는 글 수정/삭제 버튼이 있고 남의 댓글 수정 링크는 없으며, 남의 글에서는 반대인지 확인.

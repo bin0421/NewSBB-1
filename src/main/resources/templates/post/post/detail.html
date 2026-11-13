@@ -4,7 +4,8 @@
     <title th:text="|${post.id}번 글 본문 - ${post.title}|"></title>
 </head>
 
-<div layout:fragment="content">
+<div layout:fragment="content"
+     th:with="isPostAuthor = ${currentUsername != null and post.author?.username == currentUsername}">
 
     <h2>번호 : [[${post.id}]]</h2>
 
@@ -74,7 +75,8 @@
             <h4>작성일 : <span th:text="${#temporals.format(postComment.createDate, 'yy.MM.dd HH:mm')}">작성일</span></h4>
             <h4>수정일 : <span th:text="${#temporals.format(postComment.modifyDate, 'yy.MM.dd HH:mm')}">수정일</span></h4>
             <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
-            <div>
+            <!-- 043-B 나아가기 : 댓글 작성자 본인에게만 수정/삭제 -->
+            <div th:if="${currentUsername != null and postComment.author?.username == currentUsername}">
                 <a th:href="@{/posts/{id}/comments/{commentId}/modify(id=${post.id}, commentId=${postComment.id})}">수정</a>
                 <a
                         method="DELETE"
@@ -91,11 +93,12 @@
     <div>
         <a href=".">글 목록</a>
         <a href="write">글 쓰기</a>
-        <a th:href="@{{id}/modify(id=${post.id})}">글 수정</a>
+        <!-- 043-B 나아가기 : 글 작성자 본인에게만 수정/삭제 -->
+        <a th:if="${isPostAuthor}" th:href="@{{id}/modify(id=${post.id})}">글 수정</a>
     </div>
 
     <!-- 029-A 나아가기 : 글 삭제 -->
-    <form method="POST" th:action="@{/posts/{id}/delete(id=${post.id})}"
+    <form th:if="${isPostAuthor}" method="POST" th:action="@{/posts/{id}/delete(id=${post.id})}"
           onsubmit="return confirm('정말 삭제하시겠습니까?');">
         <button type="submit">글 삭제</button>
     </form>
