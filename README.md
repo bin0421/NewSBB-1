@@ -680,3 +680,13 @@
 - **개선점 발견** : 폼마다 hidden input 을 직접 쓰는 것은 번거롭고 빠뜨리기 쉽다.
 - **추가한 기능** : hidden input 을 지우고 `<form method="POST" th:action ...>`.
 - **구현 설명** : 타임리프 + 시큐리티 연동은 `th:action` 이 있는 POST 폼에 CSRF hidden input 을 **자동으로 삽입**한다. 값 없는 `th:action` 은 현재 주소를 action 으로 쓴다.
+
+### 041-5 DELETE MAPPING + CSRF 개선 `복습하기`
+
+- **개선점 발견** : 댓글 삭제(`a[method=DELETE]`)는 `global.js` 가 즉석에서 폼을 만들어 보내는데, 이 폼에는 타임리프가 토큰을 넣어줄 수 없어 403 이 난다.
+- **추가한 기능** : 레이아웃 head 에 `<meta name="_csrf" th:content="${_csrf.token}">`.
+- **구현 설명** : `global.js` 는 이미 `meta[name="_csrf"]` 의 값을 읽어 `_csrf` hidden input 으로 넣도록 작성되어 있었다(039-1). 레이아웃에 메타 태그를 두면 모든 페이지의 자바스크립트 요청이 토큰을 쓸 수 있다.
+
+---
+
+**복습하기 완료** — 강사 저장소 p-14168-2 의 커밋 001 ~ 041-5 를 모두 따라 구현했다.
