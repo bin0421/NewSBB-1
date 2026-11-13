@@ -574,3 +574,9 @@
 - **개선점 발견** : 같은 인스턴스끼리 비교할 때도 클래스·id 비교를 거친다.
 - **추가한 기능** : `if (o == this) return true;` 를 맨 앞에.
 - **구현 설명** : 참조가 같으면(동일성) 당연히 동등하므로 바로 리턴하는 빠른 경로.
+
+### 036-1 댓글 수정 폼/처리 `복습하기`
+
+- **개선점 발견** : 댓글의 "수정" 링크가 갈 곳이 없다.
+- **추가한 기능** : `GET /posts/{postId}/comments/{id}/modify` → `post/postComment/modify.html`(글·댓글 정보 + 수정 textarea), `POST` 같은 주소로 수정 처리. `PostComment.modify`, `PostService.modifyComment`, 댓글 `ModifyForm`.
+- **구현 설명** : 글 수정과 같은 흐름. 수정은 변경 감지로 UPDATE 되고, 처리 후 글 상세로 리다이렉트.

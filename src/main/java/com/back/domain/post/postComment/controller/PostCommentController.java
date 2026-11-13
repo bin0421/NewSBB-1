@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,46 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class PostCommentController {
     private final PostService postService;
+
+
+    @AllArgsConstructor
+    @Getter
+    public static class ModifyForm {
+        @NotBlank
+        @Size(min = 2, max = 100)
+        private String content;
+    }
+
+    @GetMapping("/posts/{postId}/comments/{id}/modify")
+    @Transactional(readOnly = true)
+    public String showModify(
+            @PathVariable int postId,
+            @PathVariable int id,
+            Model model
+    ) {
+        Post post = postService.findById(postId).get();
+        PostComment postComment = post.findCommentById(id).get();
+
+        model.addAttribute("post", post);
+        model.addAttribute("postComment", postComment);
+
+        return "post/postComment/modify";
+    }
+
+    @PostMapping("/posts/{postId}/comments/{id}/modify")
+    @Transactional
+    public String modify(
+            @PathVariable int postId,
+            @PathVariable int id,
+            @Valid ModifyForm modifyForm
+    ) {
+        Post post = postService.findById(postId).get();
+        PostComment postComment = post.findCommentById(id).get();
+
+        postService.modifyComment(postComment, modifyForm.getContent());
+
+        return "redirect:/posts/" + postId;
+    }
 
 
     @AllArgsConstructor
