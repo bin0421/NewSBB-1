@@ -606,3 +606,9 @@
   - 댓글 컨트롤러도 `post.findCommentById(id).get()` 을 쓰므로 `NoSuchElementException` 이 발생 → `GlobalExceptionHandler` 가 404 로 바꾼다. 전역 처리 덕분에 댓글 쪽 코드는 고치지 않았다.
   - 수정 요청은 `_method=PUT` 파라미터를 함께 보내 038 이후(HiddenHttpMethodFilter)에도 그대로 통과하게 했다.
   - ⚠️ 테스트 `t5` 코드는 실수로 036-A 커밋에 먼저 포함되었다.
+
+### 037 폼 DTO 를 record 로 `복습하기`
+
+- **개선점 발견** : 폼 클래스마다 `@AllArgsConstructor`, `@Getter`, `@Setter`, private 필드 선언이 반복된다.
+- **추가한 기능** : `WriteForm`, `ModifyForm`(글·댓글 모두)을 `record` 로 변경. 수정 폼 초기값은 `new ModifyForm(post.getTitle(), post.getContent())` 로 모델에 넣는다.
+- **구현 설명** : `record` 는 불변 데이터 클래스로, 생성자·접근자(`title()`)·`equals/hashCode/toString` 을 자동 생성한다. 스프링은 record 를 생성자 바인딩으로 채우고, 제약 어노테이션은 컴포넌트에 붙인다. 같은 클래스(컨트롤러) 안의 중첩 record 라 private 필드 `form.title` 에도 직접 접근한다. 불변이므로 `@Setter` 대신 생성자로 값을 채운다.
