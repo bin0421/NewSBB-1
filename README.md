@@ -368,3 +368,9 @@
 - **개선점 발견** : `doWrite` 의 "do" 는 POST 라는 메서드가 이미 말해 준다.
 - **추가한 기능** : `@PostMapping("/posts/write")`, 폼 `action="write"`.
 - **구현 설명** : URL 이 같아도 HTTP 메서드가 다르면 스프링이 다른 액션 메서드로 구분한다. `GET /posts/write` = 폼 보여주기, `POST /posts/write` = 처리.
+
+### 023-2 현재 페이지 action 생략 `복습하기`
+
+- **개선점 발견** : action 이 현재 페이지 주소와 같다.
+- **추가한 기능** : `action` 속성 삭제.
+- **구현 설명** : action 이 없으면 폼은 현재 주소로 전송된다.
