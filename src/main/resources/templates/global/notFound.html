@@ -1,8 +1,17 @@
-<!-- 029-C 나아가기 : 404 페이지 -->
-<h2>요청하신 데이터를 찾을 수 없습니다.</h2>
+<html layout:decorate="~{layout}">
 
-<div>삭제되었거나 존재하지 않는 글 또는 댓글입니다.</div>
+<head>
+    <title>페이지를 찾을 수 없습니다</title>
+</head>
 
-<div>
-    <a href="/posts">글 목록</a>
+<!-- 029-C 나아가기 : 404 페이지 / 047-A : 레이아웃 적용 -->
+<div layout:fragment="content">
+    <h2>요청하신 데이터를 찾을 수 없습니다.</h2>
+
+    <div>삭제되었거나 존재하지 않는 글 또는 댓글입니다.</div>
+
+    <div>
+        <a href="/posts">글 목록</a>
+    </div>
 </div>
+</html>

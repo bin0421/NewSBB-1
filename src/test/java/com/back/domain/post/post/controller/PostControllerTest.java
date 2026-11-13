@@ -308,4 +308,16 @@ class PostControllerTest {
         mvc.perform(get("/posts/%d".formatted(post.getId())))
                 .andExpect(content().string(containsString("id=\"postComment-%d\"".formatted(commentId))));
     }
+
+    @Test
+    @DisplayName("047-A 루트·에러 페이지 : / 는 목록으로, 없는 주소도 404, 에러 페이지에도 레이아웃(헤더 메뉴)")
+    void t16() throws Exception {
+        mvc.perform(get("/")).andExpect(redirectedUrl("/posts"));
+
+        mvc.perform(get("/no-such-page"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("요청하신 데이터를 찾을 수 없습니다.")))
+                .andExpect(content().string(containsString("커뮤니티 사이트 A all rights reserved.")))
+                .andExpect(content().string(containsString("user1님")));
+    }
 }

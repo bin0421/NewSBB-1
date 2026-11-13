@@ -812,3 +812,12 @@
   - 댓글 `<li>` 마다 `th:id="|postComment-${postComment.id}|"` 를 붙였다. URL 의 `#id`(fragment)는 서버로 전송되지 않고 브라우저가 같은 id 의 요소로 스크롤한다.
   - 작성 직후 새 댓글의 id 가 필요하다 → 043-A 에서 `writeComment` 가 `flush()` 로 INSERT 를 즉시 실행하게 해 둔 덕분에 리턴받은 댓글의 id 를 바로 쓸 수 있다.
   - 테스트 `t15` : 작성·수정 후 리다이렉트 주소의 앵커, 상세페이지의 `id="postComment-N"` 확인. `t11`(댓글 추천)도 앵커 주소로 맞췄다.
+
+### 047-A 루트(/) 이동 + 404·403 페이지 레이아웃 `나아가기`
+
+- **개선점 발견** : 사이트 주소(`/`)로 들어오면 아무 페이지도 없어 에러가 난다. 404·403 페이지는 레이아웃 없이 덩그러니 나오고, 없는 주소(`/abc`)는 스프링 기본 에러 페이지가 뜬다.
+- **추가한 기능** : `GET /` → `/posts` 리다이렉트(`HomeController`). 404·403 페이지에 레이아웃(헤더·푸터) 적용. 없는 주소도 같은 404 페이지.
+- **구현 설명**
+  - 정적 파일까지 찾지 못한 요청은 `NoResourceFoundException` 이 발생한다. `@ExceptionHandler({NoSuchElementException.class, NoResourceFoundException.class})` 로 함께 처리.
+  - ⚠️ `@ExceptionHandler` 가 만드는 모델에는 `@ControllerAdvice` 의 `@ModelAttribute`(041-B `currentUsername`)가 적용되지 않는다. 그래서 에러 페이지 헤더가 로그인 상태여도 "로그인/회원가입"으로 보였다 → 핸들러에서 `request.getUserPrincipal()` 로 직접 넣었다.
+  - 테스트 `t16` : `/` 리다이렉트, 없는 주소 404 + 레이아웃 푸터 + 로그인 사용자 헤더 확인.
