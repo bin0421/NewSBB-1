@@ -362,3 +362,9 @@
 - **개선점 발견** : 에러 목록 + 포커스 스크립트는 앞으로 모든 폼에서 쓸 공통 부품이다.
 - **추가한 기능** : `templates/form_errors.html` 에 `th:fragment="formErrorsFragment"` 로 등록, `write.html` 은 `<div th:replace="~{form_errors :: formErrorsFragment}">`.
 - **구현 설명** : `th:replace` 는 해당 태그를 프래그먼트로 통째로 교체한다. 프래그먼트 안의 `#fields` 는 삽입된 위치(`th:object` form 안)의 문맥을 그대로 쓴다.
+
+### 023-1 POST /posts/doWrite -> POST /posts/write `복습하기`
+
+- **개선점 발견** : `doWrite` 의 "do" 는 POST 라는 메서드가 이미 말해 준다.
+- **추가한 기능** : `@PostMapping("/posts/write")`, 폼 `action="write"`.
+- **구현 설명** : URL 이 같아도 HTTP 메서드가 다르면 스프링이 다른 액션 메서드로 구분한다. `GET /posts/write` = 폼 보여주기, `POST /posts/write` = 처리.

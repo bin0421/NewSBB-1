@@ -1,6 +1,6 @@
 <h1 th:text="${siteName}"></h1>
 
-<form method="POST" action="doWrite" th:object="${form}">
+<form method="POST" action="write" th:object="${form}">
     <div th:replace="~{form_errors :: formErrorsFragment}"></div>
 
     <div>
