@@ -232,3 +232,9 @@
 - **개선점 발견** : GET 에서 `writeForm` 이 null 이라 터진다.
 - **추가한 기능** : `${writeForm?.title}`, `${writeForm?.content}`.
 - **구현 설명** : SpEL 안전 탐색 연산자 `?.` 는 앞이 null 이면 null 을 반환해 예외가 나지 않는다.
+
+### 014-7 writeForm.title 복귀, showWrite 에 @Valid WriteForm 추가 `복습하기`
+
+- **개선점 발견** : 템플릿 곳곳에 `?.` 를 쓰는 대신, GET 에도 `writeForm` 을 넣어주면 된다.
+- **추가한 기능** : `showWrite(@Valid WriteForm form)` 로 파라미터 추가, 템플릿은 다시 `writeForm.title`.
+- **구현 설명** : 파라미터로 받기만 해도 모델에 `writeForm` 이 담긴다. 그러나 `@Valid` 때문에 빈 폼을 여는 순간 유효성 검사가 실패해 400 에러(BindingResult 없음) → 의도된 실패 단계.

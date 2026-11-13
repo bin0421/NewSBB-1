@@ -3,9 +3,9 @@
 </ul>
 
 <form method="POST" action="doWrite">
-    <input type="text" name="title" placeholder="제목" th:value="${writeForm?.title}" autofocus>
+    <input type="text" name="title" placeholder="제목" th:value="${writeForm.title}" autofocus>
     <br>
-    <textarea name="content" placeholder="내용" th:text="${writeForm?.content}"></textarea>
+    <textarea name="content" placeholder="내용" th:text="${writeForm.content}"></textarea>
     <br>
     <input type="submit" value="작성">
 </form>
