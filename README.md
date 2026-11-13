@@ -620,3 +620,12 @@
 - **구현 설명** : `HiddenHttpMethodFilter` 가 POST 요청의 `_method` 파라미터를 보고 요청 메서드를 PUT/DELETE 등으로 바꿔 디스패치한다. 같은 URL 을 `GET`(폼) / `PUT`(처리)으로 구분한다.
 
 > 042, 043 회차는 커밋이 없다.
+
+### 039-1 layout 라이브러리, global.js, siteName 제거 `복습하기`
+
+- **개선점 발견** : 모든 템플릿에 `<h1 th:text="${siteName}">` 를 반복하고, `<html>/<head>` 같은 공통 뼈대가 없다. 공통 스크립트를 넣을 곳도 없다.
+- **추가한 기능** : `thymeleaf-layout-dialect` 의존성, 공통 뼈대 `templates/layout.html`(head, header, footer, `/global.js`), 각 페이지는 `<html layout:decorate="~{layout}">` + `<div layout:fragment="content">`. `@ModelAttribute("siteName")` 제거. `static/global.js` 추가.
+- **구현 설명**
+  - 레이아웃 다이얼렉트는 각 페이지(content)가 레이아웃을 "꾸며 쓰는(decorate)" 방식이다. 레이아웃의 `layout:fragment="content"` 자리에 페이지의 같은 이름 프래그먼트가 들어간다.
+  - `global.js` : `<a method="DELETE" href="...">` 처럼 `method` 속성이 있는 링크를 클릭하면 숨은 POST 폼(+`_method`, CSRF 토큰, 쿼리 파라미터)을 만들어 전송한다. 링크로도 DELETE/PUT 요청을 보낼 수 있게 해 주는 공통 스크립트. 기존 `onclick`(confirm)은 `data-onclick` 으로 옮겨 먼저 실행한다.
+  - 나아가기에서 추가한 글 삭제 폼(029-A)과 페이징(029-B)도 `content` 프래그먼트 안으로 옮겼다.

@@ -1,3 +1,6 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+
 <script>
     function PostComment__submitModifyForm(form) {
         form.content.value = form.content.value.trim();
@@ -74,3 +77,6 @@
     <a th:href="@{/posts/{id}(id=${post.id})}">글 상세페이지</a>
     <a href="/posts">글 목록</a>
 </div>
+
+</div>
+</html>

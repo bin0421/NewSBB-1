@@ -1,4 +1,5 @@
-<h1 th:text="${siteName}"></h1>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
 
 <h2>번호 : [[${post.id}]]</h2>
 
@@ -84,3 +85,6 @@
       onsubmit="return confirm('정말 삭제하시겠습니까?');">
     <button type="submit">글 삭제</button>
 </form>
+
+</div>
+</html>

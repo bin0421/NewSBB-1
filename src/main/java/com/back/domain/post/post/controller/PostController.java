@@ -20,11 +20,6 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @ModelAttribute("siteName")
-    public String siteName() {
-        return "커뮤니티 사이트 A";
-    }
-
 
     public record ModifyForm(
             @NotBlank(message = "01-title-제목을 입력해주세요.")

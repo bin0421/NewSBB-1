@@ -1,4 +1,5 @@
-<h1 th:text="${siteName}"></h1>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
 
 <h2>글 목록</h2>
 
@@ -27,3 +28,6 @@
     </th:block>
     <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${currentPage + 1})}">다음</a>
 </div>
+
+</div>
+</html>
