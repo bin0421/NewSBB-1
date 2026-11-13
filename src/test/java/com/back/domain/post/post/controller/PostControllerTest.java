@@ -98,7 +98,7 @@ class PostControllerTest {
         mvc.perform(post(base + "/modify").param("_method", "PUT").param("content", "수정 내용"))
                 .andExpect(status().isNotFound());
 
-        mvc.perform(get(base + "/delete"))
+        mvc.perform(post(base + "/delete").param("_method", "DELETE"))
                 .andExpect(status().isNotFound());
     }
 }

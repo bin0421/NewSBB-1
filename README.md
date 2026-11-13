@@ -629,3 +629,10 @@
   - 레이아웃 다이얼렉트는 각 페이지(content)가 레이아웃을 "꾸며 쓰는(decorate)" 방식이다. 레이아웃의 `layout:fragment="content"` 자리에 페이지의 같은 이름 프래그먼트가 들어간다.
   - `global.js` : `<a method="DELETE" href="...">` 처럼 `method` 속성이 있는 링크를 클릭하면 숨은 POST 폼(+`_method`, CSRF 토큰, 쿼리 파라미터)을 만들어 전송한다. 링크로도 DELETE/PUT 요청을 보낼 수 있게 해 주는 공통 스크립트. 기존 `onclick`(confirm)은 `data-onclick` 으로 옮겨 먼저 실행한다.
   - 나아가기에서 추가한 글 삭제 폼(029-A)과 페이징(029-B)도 `content` 프래그먼트 안으로 옮겼다.
+
+### 039-2 댓글 삭제 DELETE MAPPING `복습하기`
+
+- **개선점 발견** : 댓글 삭제가 `GET` 링크다. 링크 미리 불러오기나 크롤러가 방문만 해도 삭제될 수 있고, 의미상으로도 삭제는 `DELETE` 다.
+- **추가한 기능** : `@DeleteMapping("/posts/{postId}/comments/{id}/delete")`, 삭제 링크에 `method="DELETE"` 속성.
+- **구현 설명** : 039-1 의 `global.js` 가 `a[method]` 클릭을 가로채 `_method=DELETE` 를 담은 POST 폼으로 전송하고, `HiddenHttpMethodFilter` 가 DELETE 로 바꿔 매핑한다. confirm 은 `data-onclick` 으로 옮겨져 먼저 실행된다.
+  - 나아가기 테스트 `t5`(036-B) 의 댓글 삭제 요청도 `POST + _method=DELETE` 로 맞췄다. (GET 으로 보내면 이제 405)
