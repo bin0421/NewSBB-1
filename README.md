@@ -674,3 +674,9 @@
 - **개선점 발견** : 글 작성·수정, 댓글 수정 폼이 CSRF 토큰 없이 전송되어 403 이 난다.
 - **추가한 기능** : 각 폼에 `<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />`.
 - **구현 설명** : CSRF(사이트 간 요청 위조) 방어 — 서버가 발급한 토큰을 폼에 숨겨 두고, 요청에 같은 토큰이 있어야 처리한다. 다른 사이트가 몰래 만든 폼은 이 토큰을 알 수 없다. 시큐리티가 모델에 `_csrf` 객체를 넣어 준다. (`th:action` 을 이미 쓰고 있던 댓글 작성 폼과 나아가기의 글 삭제 폼에는 토큰이 자동으로 들어가 있었다)
+
+### 041-4 th:action 으로 CSRF 토큰 `복습하기`
+
+- **개선점 발견** : 폼마다 hidden input 을 직접 쓰는 것은 번거롭고 빠뜨리기 쉽다.
+- **추가한 기능** : hidden input 을 지우고 `<form method="POST" th:action ...>`.
+- **구현 설명** : 타임리프 + 시큐리티 연동은 `th:action` 이 있는 POST 폼에 CSRF hidden input 을 **자동으로 삽입**한다. 값 없는 `th:action` 은 현재 주소를 action 으로 쓴다.

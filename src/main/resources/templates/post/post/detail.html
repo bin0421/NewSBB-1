@@ -47,7 +47,6 @@
             th:action="@{/posts/{id}/comments/write(id=${post.id})}"
             onsubmit="PostComment__submitWriteForm(this); return false;"
     >
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div>
             <label for="content">내용</label>
             <textarea id="content" name="content" rows="5" cols="50" maxlength="100"></textarea>
