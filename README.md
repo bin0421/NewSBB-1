@@ -278,3 +278,9 @@
 - **개선점 발견** : 필드마다 `form.` 접두어를 반복한다.
 - **추가한 기능** : `<form th:object="${form}">` 안에서 `*{title}`, `*{content}` 선택 변수식 사용.
 - **구현 설명** : `th:object` 로 기준 객체를 정하면 그 엘리먼트 안에서 `*{필드}` 는 `${form.필드}` 와 같다.
+
+### 019-2 th:field `복습하기`
+
+- **개선점 발견** : `name`, `id`, `value` 를 필드마다 직접 맞춰 써야 한다.
+- **추가한 기능** : `th:field="*{title}"`, `th:field="*{content}"` 로 교체.
+- **구현 설명** : `th:field` 는 `name="title" id="title" value="..."` (textarea 는 내용)를 자동 생성한다. label 의 `for="title"` 과 자동 id 가 일치한다.
