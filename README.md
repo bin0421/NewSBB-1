@@ -220,3 +220,9 @@
 - **개선점 발견** : `li` 태그가 글자로 보인다.
 - **추가한 기능** : `th:utext="${errorMessage}"` 로 교체.
 - **구현 설명** : `utext`(unescaped text)는 HTML 을 그대로 삽입해 렌더링한다. 서버가 만든 신뢰할 수 있는 HTML 에만 쓰고, 사용자 입력에는 쓰지 않는다.
+
+### 014-5 writeForm.title/content 로 값 유지 (GET /posts/write 실패) `복습하기`
+
+- **개선점 발견** : 실패 후 입력값이 사라진다.
+- **추가한 기능** : `th:value="${writeForm.title}"`, `th:text="${writeForm.content}"`.
+- **구현 설명** : `@Valid WriteForm form` 처럼 받은 객체는 **클래스명 첫 글자 소문자(`writeForm`)** 이름으로 자동으로 모델에 담긴다. 그래서 POST 실패 화면은 잘 되지만, `GET /posts/write` 에는 `writeForm` 이 없어 `null.title` 접근으로 **에러**가 난다(의도된 실패 단계).
