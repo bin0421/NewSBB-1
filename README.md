@@ -440,3 +440,9 @@
 - **개선점 발견** : 목록이 JSON 이라 사람이 보기 불편하다.
 - **추가한 기능** : `GET /posts` 가 `list.html` 렌더링. `th:each` 로 글 번호·제목(상세 링크)·작성일 출력, 글쓰기 링크.
 - **구현 설명** : `#temporals.format(post.createDate, 'yy.MM.dd HH:mm')` 로 `LocalDateTime` 포맷. 링크는 `@{/posts/{id}(id=${post.id})}`.
+
+### 028-2 상세에 작성/수정 날짜 `복습하기`
+
+- **개선점 발견** : 상세페이지에서 언제 쓰고 고쳤는지 알 수 없다.
+- **추가한 기능** : 상세에 작성일, 수정일 표시.
+- **구현 설명** : `BaseEntity` 의 auditing 필드(`@CreatedDate`, `@LastModifiedDate`)를 `#temporals.format` 으로 출력.
