@@ -6,6 +6,10 @@ spring:
   output:
     ansi:
       enabled: always
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   datasource:
     hikari:
       auto-commit: false

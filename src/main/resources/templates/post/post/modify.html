@@ -1,6 +1,7 @@
 <h1 th:text="${siteName}"></h1>
 
 <form method="POST" th:object="${form}">
+    <input type="hidden" name="_method" value="PUT">
     <div th:replace="~{form_errors :: formErrorsFragment}"></div>
 
     <div>

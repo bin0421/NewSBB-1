@@ -19,6 +19,8 @@
 </script>
 
 <form method="POST" onsubmit="PostComment__submitModifyForm(this); return false;">
+    <input type="hidden" name="_method" value="PUT">
+
     <div>
         <label><strong>글 ID</strong></label><br>
         <span th:text="${post.id}"></span>

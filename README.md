@@ -612,3 +612,11 @@
 - **개선점 발견** : 폼 클래스마다 `@AllArgsConstructor`, `@Getter`, `@Setter`, private 필드 선언이 반복된다.
 - **추가한 기능** : `WriteForm`, `ModifyForm`(글·댓글 모두)을 `record` 로 변경. 수정 폼 초기값은 `new ModifyForm(post.getTitle(), post.getContent())` 로 모델에 넣는다.
 - **구현 설명** : `record` 는 불변 데이터 클래스로, 생성자·접근자(`title()`)·`equals/hashCode/toString` 을 자동 생성한다. 스프링은 record 를 생성자 바인딩으로 채우고, 제약 어노테이션은 컴포넌트에 붙인다. 같은 클래스(컨트롤러) 안의 중첩 record 라 private 필드 `form.title` 에도 직접 접근한다. 불변이므로 `@Setter` 대신 생성자로 값을 채운다.
+
+### 038 _method 파라미터로 Put/DeleteMapping `복습하기`
+
+- **개선점 발견** : 수정 처리가 `POST` 다. 의미상 수정은 `PUT` 이지만 HTML 폼은 GET/POST 만 보낼 수 있다.
+- **추가한 기능** : `spring.mvc.hiddenmethod.filter.enabled: true`, 수정 폼에 `<input type="hidden" name="_method" value="PUT">`, 처리 메서드는 `@PutMapping`(글·댓글).
+- **구현 설명** : `HiddenHttpMethodFilter` 가 POST 요청의 `_method` 파라미터를 보고 요청 메서드를 PUT/DELETE 등으로 바꿔 디스패치한다. 같은 URL 을 `GET`(폼) / `PUT`(처리)으로 구분한다.
+
+> 042, 043 회차는 커밋이 없다.
