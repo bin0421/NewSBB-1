@@ -14,7 +14,7 @@
 
 <h2>댓글 작성</h2>
 
-<form method="POST" th:action="@{/posts/{id}/comments/write(id=${post.id})}">
+<form method="POST" th:action="@{/posts/{id}/comments/write(id=${post.id})}" onsubmit="return false;">
     <div>
         <label for="content">내용</label>
         <textarea id="content" name="content" rows="5" cols="50"></textarea>
