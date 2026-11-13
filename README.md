@@ -446,3 +446,9 @@
 - **개선점 발견** : 상세페이지에서 언제 쓰고 고쳤는지 알 수 없다.
 - **추가한 기능** : 상세에 작성일, 수정일 표시.
 - **구현 설명** : `BaseEntity` 의 auditing 필드(`@CreatedDate`, `@LastModifiedDate`)를 `#temporals.format` 으로 출력.
+
+### 029-1 modify.html `복습하기`
+
+- **개선점 발견** : 상세의 "글 수정" 링크(`/posts/{id}/modify`)가 갈 곳이 없다.
+- **추가한 기능** : `ModifyForm`(WriteForm 과 같은 제약 + `@Setter`), `GET /posts/{id}/modify` → `modify.html`. 기존 제목·내용을 폼에 채워서 보여준다.
+- **구현 설명** : `@ModelAttribute("form") ModifyForm form` 으로 빈 폼 객체를 모델에 올린 뒤 `form.setTitle(post.getTitle())` 처럼 값을 채운다. 템플릿은 write.html 과 같은 구조에 글 ID·작성일·수정일 표시, 폼 에러 프래그먼트 재사용. (content 최대 100자 — 결정 사항 9)

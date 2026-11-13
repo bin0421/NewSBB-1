@@ -1,0 +1,35 @@
+<h1 th:text="${siteName}"></h1>
+
+<form method="POST" th:object="${form}">
+    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+
+    <div>
+        <label>글 ID</label><br>
+        <span th:text="${post.id}"></span>
+    </div>
+
+    <div>
+        <label>글 작성일</label><br>
+        <span th:text="${#temporals.format(post.createDate, 'yy.MM.dd HH:mm')}"></span>
+    </div>
+
+    <div>
+        <label>글 수정일</label><br>
+        <span th:text="${#temporals.format(post.modifyDate, 'yy.MM.dd HH:mm')}"></span>
+    </div>
+
+    <div>
+        <label for="title">제목</label><br>
+        <input type="text" placeholder="제목" autofocus th:field="*{title}">
+    </div>
+    <div>
+        <label for="content">내용</label><br>
+        <textarea placeholder="내용" th:field="*{content}"></textarea>
+    </div>
+    <input type="submit" value="수정">
+</form>
+
+<div>
+    <a th:href="@{/posts/{id}(id=${post.id})}">글 상세페이지</a>
+    <a href="/posts">글 목록</a>
+</div>
