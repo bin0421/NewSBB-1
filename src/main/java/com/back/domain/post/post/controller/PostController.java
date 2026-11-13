@@ -55,6 +55,8 @@ public class PostController {
                     .sorted()
                     .collect(Collectors.joining("\n"));
 
+            model.addAttribute("errorMessage", errorMessage);
+
             return "post/post/write";
         }
 

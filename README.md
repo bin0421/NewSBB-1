@@ -208,3 +208,9 @@
 - **개선점 발견** : POST 처리 결과도 여전히 자바 문자열 HTML.
 - **추가한 기능** : `getWriteFormHtml` 삭제. 실패시 `write.html`, 성공시 `writeDone.html` 렌더링.
 - **구현 설명** : 액션 메서드에 `Model model` 을 받아 `model.addAttribute("post", post)` 로 템플릿에 값 전달. 템플릿에서는 인라인 표현식 `[[${post.id}]]` 로 출력. 실패 메세지·입력값은 아직 템플릿에 연결하지 않았다.
+
+### 014-3 th:text 는 이스케이프 `복습하기`
+
+- **개선점 발견** : 실패해도 에러 메세지가 보이지 않는다.
+- **추가한 기능** : `model.addAttribute("errorMessage", errorMessage)` + `<ul th:text="${errorMessage}">`.
+- **구현 설명** : `th:text` 는 값을 HTML 이스케이프해 태그 내용으로 넣는다. 그래서 `<li ...>` 가 태그로 렌더링되지 않고 문자 그대로 화면에 보인다(XSS 방지가 기본).
