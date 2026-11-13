@@ -284,3 +284,9 @@
 - **개선점 발견** : `name`, `id`, `value` 를 필드마다 직접 맞춰 써야 한다.
 - **추가한 기능** : `th:field="*{title}"`, `th:field="*{content}"` 로 교체.
 - **구현 설명** : `th:field` 는 `name="title" id="title" value="..."` (textarea 는 내용)를 자동 생성한다. label 의 `for="title"` 과 자동 id 가 일치한다.
+
+### 020-1 #fields 로 에러 메세지 출력 `복습하기`
+
+- **개선점 발견** : 컨트롤러가 에러 HTML(`<li>`)까지 만들어 넘긴다. 화면 표현은 템플릿의 몫이다.
+- **추가한 기능** : 컨트롤러는 `if (bindingResult.hasErrors()) return "post/post/write";` 한 줄로 축소. 템플릿 `th:object` 안에서 `#fields.hasAnyErrors()`, `th:each="err : ${#fields.allErrors()}"` 로 출력.
+- **구현 설명** : `#fields` 는 `th:object` 객체의 BindingResult 에 접근하는 타임리프 유틸리티. 에러 목록 `ul` 은 `form` 안으로 옮겼다.

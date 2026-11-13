@@ -1,10 +1,10 @@
 <h1 th:text="${siteName}"></h1>
 
-<ul style="color: red;">
-    <th:block th:utext="${errorMessage}"></th:block>
-</ul>
-
 <form method="POST" action="doWrite" th:object="${form}">
+    <ul th:if="${#fields.hasAnyErrors()}" style="color: red;">
+        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+    </ul>
+
     <div>
         <label for="title">제목</label><br>
         <input type="text" placeholder="제목" th:field="*{title}" autofocus>
