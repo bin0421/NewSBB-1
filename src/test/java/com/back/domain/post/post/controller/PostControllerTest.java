@@ -252,4 +252,24 @@ class PostControllerTest {
                 .andExpect(content().string(containsString("검색용 11")))
                 .andExpect(content().string(containsString("kw=%EA%B2%80%EC%83%89%EC%96%B4zz")));
     }
+
+    @Test
+    @DisplayName("045-B 정렬 : 추천순이면 추천 많은 글이 먼저, 페이지 링크에 정렬이 유지된다")
+    void t13() throws Exception {
+        Member user2 = memberService.findByUsername("user2").get();
+        Post popular = postService.write(user1(), "인기글", "추천 2개");
+        postService.toggleVote(popular, user1());
+        postService.toggleVote(popular, user2);
+        Post normal = postService.write(user1(), "보통글", "추천 1개");
+        postService.toggleVote(normal, user1());
+        for (int i = 1; i <= 10; i++) postService.write(user2, "최신글 " + i, "추천 없음");
+
+        assertThat(postService.getPage(1, "", "vote").getContent().get(0).getTitle()).isEqualTo("인기글");
+        assertThat(postService.getPage(1, "", "vote").getContent().get(1).getTitle()).isEqualTo("보통글");
+        assertThat(postService.getPage(1, "", "latest").getContent().get(0).getTitle()).isEqualTo("최신글 10");
+
+        mvc.perform(get("/posts").param("sort", "vote"))
+                .andExpect(content().string(containsString("<strong>추천순</strong>")))
+                .andExpect(content().string(containsString("sort=vote")));
+    }
 }

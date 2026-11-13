@@ -35,10 +35,20 @@ public class PostService {
 
     // 045-A 나아가기 : 검색어(kw)가 있으면 검색 결과를 페이징
     public Page<Post> getPage(int page, String kw) {
+        return getPage(page, kw, "latest");
+    }
+
+    // 045-B 나아가기 : 정렬 (latest : 최신순, vote : 추천순)
+    public Page<Post> getPage(int page, String kw, String sort) {
         int pageNumber = Math.max(page, 1) - 1;
         Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by(Sort.Order.desc("id")));
 
-        return postRepository.search(kw == null ? "" : kw.trim(), pageable);
+        String keyword = kw == null ? "" : kw.trim();
+
+        if ("vote".equals(sort))
+            return postRepository.searchOrderByVoteCount(keyword, PageRequest.of(pageNumber, PAGE_SIZE));
+
+        return postRepository.search(keyword, pageable);
     }
 
     public static final int PAGE_SIZE = 10;

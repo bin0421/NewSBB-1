@@ -116,12 +116,14 @@ public class PostController {
     public String showList(
             Model model,
             @RequestParam(defaultValue = "1") int page, // 029-B 나아가기 : 페이징
-            @RequestParam(defaultValue = "") String kw // 045-A 나아가기 : 검색어
+            @RequestParam(defaultValue = "") String kw, // 045-A 나아가기 : 검색어
+            @RequestParam(defaultValue = "latest") String sort // 045-B 나아가기 : 정렬
     ) {
-        Page<Post> posts = postService.getPage(page, kw);
+        Page<Post> posts = postService.getPage(page, kw, sort);
 
         model.addAttribute("posts", posts);
         model.addAttribute("kw", kw);
+        model.addAttribute("sort", sort);
 
         return "post/post/list";
     }

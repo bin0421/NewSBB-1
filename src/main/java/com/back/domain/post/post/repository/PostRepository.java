@@ -18,4 +18,24 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                or a.username like concat('%', :kw, '%')
             """)
     Page<Post> search(@Param("kw") String kw, Pageable pageable);
+
+    // 045-B 나아가기 : 추천순 정렬 (추천 수가 같으면 최신순). 컬렉션 크기 정렬은 Sort 로 표현할 수 없어 JPQL 로 작성
+    @Query(value = """
+            select p from Post p
+            left join p.author a
+            where :kw = ''
+               or p.title like concat('%', :kw, '%')
+               or p.content like concat('%', :kw, '%')
+               or a.username like concat('%', :kw, '%')
+            order by size(p.voters) desc, p.id desc
+            """,
+            countQuery = """
+            select count(p) from Post p
+            left join p.author a
+            where :kw = ''
+               or p.title like concat('%', :kw, '%')
+               or p.content like concat('%', :kw, '%')
+               or a.username like concat('%', :kw, '%')
+            """)
+    Page<Post> searchOrderByVoteCount(@Param("kw") String kw, Pageable pageable);
 }

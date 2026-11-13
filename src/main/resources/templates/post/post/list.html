@@ -11,8 +11,18 @@
     <!-- 045-A 나아가기 : 검색 -->
     <form method="GET" th:action="@{/posts}">
         <input type="search" name="kw" placeholder="제목, 내용, 작성자" th:value="${kw}">
+        <input type="hidden" name="sort" th:value="${sort}">
         <button type="submit">검색</button>
     </form>
+    <!-- 045-B 나아가기 : 정렬 -->
+    <div>
+        <strong th:if="${sort != 'vote'}">최신순</strong>
+        <a th:unless="${sort != 'vote'}" th:href="@{/posts(kw=${kw}, sort=latest)}">최신순</a>
+        |
+        <strong th:if="${sort == 'vote'}">추천순</strong>
+        <a th:unless="${sort == 'vote'}" th:href="@{/posts(kw=${kw}, sort=vote)}">추천순</a>
+    </div>
+
     <div th:if="${posts.isEmpty()}">검색 결과가 없습니다.</div>
 
     <ul>
@@ -35,12 +45,12 @@
          th:with="currentPage = ${posts.number + 1},
                   startPage = ${T(java.lang.Math).max(1, currentPage - 4)},
                   endPage = ${T(java.lang.Math).min(posts.totalPages, currentPage + 4)}">
-        <a th:if="${posts.hasPrevious()}" th:href="@{/posts(page=${currentPage - 1}, kw=${kw})}">이전</a>
+        <a th:if="${posts.hasPrevious()}" th:href="@{/posts(page=${currentPage - 1}, kw=${kw}, sort=${sort})}">이전</a>
         <th:block th:each="p : ${#numbers.sequence(startPage, endPage)}">
             <strong th:if="${p == currentPage}" th:text="${p}"></strong>
-            <a th:unless="${p == currentPage}" th:href="@{/posts(page=${p}, kw=${kw})}" th:text="${p}"></a>
+            <a th:unless="${p == currentPage}" th:href="@{/posts(page=${p}, kw=${kw}, sort=${sort})}" th:text="${p}"></a>
         </th:block>
-        <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${currentPage + 1}, kw=${kw})}">다음</a>
+        <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${currentPage + 1}, kw=${kw}, sort=${sort})}">다음</a>
     </div>
 
 </div>
