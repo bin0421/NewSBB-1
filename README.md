@@ -392,3 +392,9 @@
 - **개선점 발견** : 이동만 할 거라면 HTML 페이지가 필요 없다.
 - **추가한 기능** : `return "redirect:/posts/write";`, `writeDone.html` 과 `Model` 파라미터 삭제.
 - **구현 설명** : `redirect:` 접두어는 302 응답 + `Location` 헤더를 보낸다. POST 후 Redirect 후 GET 하는 **PRG 패턴**으로, 새로고침해도 POST 가 다시 전송되지 않는다.
+
+### 026-1 글 상세페이지, 작성 후 상세로 이동 `복습하기`
+
+- **개선점 발견** : 작성한 글을 볼 방법이 없다. 작성 후 다시 빈 폼으로 돌아간다.
+- **추가한 기능** : `GET /posts/{id}` → `detail.html`, 작성 후 `redirect:/posts/{새 글 id}`. `PostService.findById`.
+- **구현 설명** : `@PathVariable int id` 로 URL 경로의 값을 받는다. 조회 전용 메서드에는 `@Transactional(readOnly = true)` 로 변경 감지 등 불필요한 작업을 줄인다. `findById` 는 `Optional` 을 리턴하므로 일단 `.get()`.

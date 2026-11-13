@@ -1,5 +1,6 @@
 package com.back.domain.post.post.controller;
 
+import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -9,9 +10,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -49,8 +52,22 @@ public class PostController {
     ) {
         if (bindingResult.hasErrors()) return "post/post/write";
 
-        postService.write(form.getTitle(), form.getContent());
+        Post post = postService.write(form.getTitle(), form.getContent());
 
-        return "redirect:/posts/write";
+        return "redirect:/posts/" + post.getId();
+    }
+
+
+    @GetMapping("/posts/{id}")
+    @Transactional(readOnly = true)
+    public String showDetail(
+            @PathVariable int id,
+            Model model
+    ) {
+        Post post = postService.findById(id).get();
+
+        model.addAttribute("post", post);
+
+        return "post/post/detail";
     }
 }
