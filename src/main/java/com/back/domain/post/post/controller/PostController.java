@@ -136,4 +136,16 @@ public class PostController {
     public String redirectToList() {
         return "redirect:/posts";
     }
+
+
+    // 029-A 나아가기 : 글 삭제
+    @PostMapping("/posts/{id}/delete")
+    @Transactional
+    public String delete(@PathVariable int id) {
+        Post post = postService.findById(id).get();
+
+        postService.delete(post);
+
+        return "redirect:/posts";
+    }
 }

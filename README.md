@@ -458,3 +458,13 @@
 - **개선점 발견** : 수정 폼을 전송해도 처리하지 않는다.
 - **추가한 기능** : `POST /posts/{id}/modify` — 유효성 실패시 수정 폼 재표시, 성공시 `Post.modify()` 후 상세로 리다이렉트.
 - **구현 설명** : `postService.modify(post, title, content)` 는 엔티티 필드만 바꾸고 `save` 를 호출하지 않는다. `@Transactional` 안에서 조회한 영속 엔티티는 트랜잭션 커밋 때 **변경 감지(dirty checking)** 로 UPDATE 가 자동 실행된다. 이때 `@LastModifiedDate` 로 수정일도 갱신된다.
+
+### 029-A 글 삭제 `나아가기`
+
+- **개선점 발견** : 글 작성·조회·수정은 되지만 삭제가 없다. 강사 코드에는 댓글 삭제(034)만 있고 글 삭제는 끝까지 없다.
+- **추가한 기능** : 상세페이지에 "글 삭제" 버튼, `POST /posts/{id}/delete` → 삭제 후 목록으로 리다이렉트.
+- **구현 설명**
+  - 삭제는 서버 상태를 바꾸므로 링크(GET)가 아니라 `<form method="POST">` 로 보낸다. `onsubmit="return confirm(...)"` 으로 취소하면 전송되지 않는다.
+  - `th:action="@{/posts/{id}/delete(id=${post.id})}"` — 링크 표현식으로 주소를 만든다(시큐리티 도입 후 CSRF 토큰 자동 삽입에도 유리).
+  - `PostService.delete(post)` → `postRepository.delete(post)`.
+  - 테스트 `PostControllerTest.t1` : MockMvc 로 삭제 요청 후 리다이렉트 주소와 실제 삭제 여부 확인.
