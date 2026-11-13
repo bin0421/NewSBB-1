@@ -4,7 +4,7 @@
     <ul th:if="${#fields.hasAnyErrors()}" style="color: red;">
         <li
                 th:each="err : ${#fields.allErrors().stream().sorted()}"
-                data-error-field-name="title"
+                data-error-field-name="${err.split('-', 3)[1]}"
                 th:text="${err.split('-', 3)[2]}"
         ></li>
     </ul>
