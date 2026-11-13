@@ -254,3 +254,9 @@
   - `application-dev.yaml` : `spring.thymeleaf.cache: false`, `prefix: file:src/main/resources/templates/`.
   - 파라미터에 `@ModelAttribute("form")` 을 붙여 모델 이름을 `form` 으로 지정.
 - **구현 설명** : prefix 를 `file:` 소스 폴더로 바꾸면 빌드 결과물(classpath)이 아니라 원본 파일을 바로 읽으므로, 캐시를 끈 상태에서 새로고침만으로 수정이 반영된다(dev 프로필 한정).
+
+### 016 @ModelAttribute("siteName") 공통 변수 `복습하기`
+
+- **개선점 발견** : 모든 페이지에 공통으로 보일 사이트 이름을 액션 메서드마다 `model.addAttribute` 하기는 번거롭다.
+- **추가한 기능** : 컨트롤러에 `@ModelAttribute("siteName")` 메서드를 두고, `write.html`/`writeDone.html` 상단에 `<h1 th:text="${siteName}">`. 템플릿의 `writeForm` 은 `form` 으로 변경.
+- **구현 설명** : 메서드에 붙은 `@ModelAttribute` 는 **그 컨트롤러의 모든 액션 메서드 실행 전에** 호출되어 리턴값이 모델에 담긴다. 모든 컨트롤러에 적용하려면 `@ControllerAdvice` 클래스에 두면 된다.

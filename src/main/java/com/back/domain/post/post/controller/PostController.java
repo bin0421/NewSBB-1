@@ -23,6 +23,11 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
 
+    @ModelAttribute("siteName")
+    public String siteName() {
+        return "커뮤니티 사이트 A";
+    }
+
 
     @AllArgsConstructor
     @Getter
