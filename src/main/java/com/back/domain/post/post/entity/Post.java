@@ -4,14 +4,17 @@ import com.back.domain.member.member.entity.Member;
 import com.back.domain.post.postComment.entity.PostComment;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.security.access.AccessDeniedException;
 
 import static jakarta.persistence.CascadeType.PERSIST;
@@ -29,6 +32,10 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private final List<PostComment> comments = new ArrayList<>();
+
+    // 044-A 나아가기 : 추천한 회원들 (중복 추천 불가 -> Set)
+    @ManyToMany
+    private final Set<Member> voters = new HashSet<>();
 
     public Post(Member author, String title, String content) {
         this.author = author;
@@ -73,5 +80,15 @@ public class Post extends BaseEntity {
         if (postComment == null) return false;
 
         return comments.remove(postComment);
+    }
+
+    // 044-A 나아가기 : 추천 / 추천 취소 (토글)
+    public boolean isVotedBy(Member member) {
+        return member != null && voters.stream().anyMatch(voter -> voter.getId() == member.getId());
+    }
+
+    public void toggleVote(Member member) {
+        if (isVotedBy(member)) voters.removeIf(voter -> voter.getId() == member.getId());
+        else voters.add(member);
     }
 }

@@ -70,4 +70,9 @@ public class PostService {
     public void modifyComment(PostComment postComment, String content) {
         postComment.modify(content);
     }
+
+    // 044-A 나아가기 : 글 추천 / 추천 취소
+    public void toggleVote(Post post, Member actor) {
+        post.toggleVote(actor);
+    }
 }

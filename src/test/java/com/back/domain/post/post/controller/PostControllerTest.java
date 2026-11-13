@@ -203,4 +203,20 @@ class PostControllerTest {
                 .andExpect(content().string(not(containsString(">글 삭제</button>"))))
                 .andExpect(content().string(containsString("comments/%d/modify".formatted(otherPost.getComments().getFirst().getId()))));
     }
+
+    @Test
+    @DisplayName("044-A 글 추천 : 누르면 추천, 다시 누르면 추천 취소")
+    void t10() throws Exception {
+        Post post = postService.write(user1(), "추천 글", "추천 내용");
+        String url = "/posts/%d".formatted(post.getId());
+
+        mvc.perform(post(url + "/vote").with(csrf())).andExpect(redirectedUrl(url));
+        assertThat(post.getVoters()).hasSize(1);
+        assertThat(post.isVotedBy(user1())).isTrue();
+
+        mvc.perform(get(url)).andExpect(content().string(containsString(">추천 취소</a>")));
+
+        mvc.perform(post(url + "/vote").with(csrf())).andExpect(redirectedUrl(url));
+        assertThat(post.getVoters()).isEmpty();
+    }
 }

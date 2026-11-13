@@ -141,4 +141,16 @@ public class PostController {
 
         return "redirect:/posts";
     }
+
+
+    // 044-A 나아가기 : 글 추천 / 추천 취소
+    @PostMapping("/posts/{id}/vote")
+    @Transactional
+    public String vote(@PathVariable int id) {
+        Post post = postService.findById(id).get();
+
+        postService.toggleVote(post, rq.getActor());
+
+        return "redirect:/posts/" + id;
+    }
 }
