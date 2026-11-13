@@ -658,3 +658,13 @@
   - 의존성만 추가해도 시큐리티 자동 설정이 켜져 **모든 요청이 인증 필요**가 된다. 브라우저로 접속하면 기본 로그인 페이지로 이동하고, 콘솔에 임시 비밀번호(사용자 `user`)가 출력된다. → 의도된 "모든 요청 막힘" 단계.
   - 기본으로 CSRF 보호도 켜져 POST/PUT/DELETE 요청에 CSRF 토큰이 필요해진다.
   - 나아가기 테스트(`PostControllerTest`)는 `@WithMockUser` 로 인증 사용자 요청을 흉내 내고, 변경 요청에 `.with(csrf())` 로 토큰을 붙여 계속 통과하게 했다.
+
+### 041-2 모든 요청 허용, 정적 콘텐츠 폴더 `복습하기`
+
+- **개선점 발견** : 회원 기능이 아직 없는데 모든 페이지가 막혀 있다.
+- **추가한 기능** : `SecurityConfig` 에 `SecurityFilterChain` 빈 — `/favicon.ico`, `/resource/**`, `/h2-console/**`, `/**` 모두 `permitAll()`. H2 콘솔용 `frameOptions(sameOrigin)` 과 CSRF 예외. `global.js` 를 `static/resource/` 로 옮기고 레이아웃 경로 수정.
+- **구현 설명**
+  - `authorizeHttpRequests` 는 위에서부터 첫 번째로 맞는 규칙이 적용된다. 지금은 `/**` 가 전부 허용하고, 나중에 회원 기능이 생기면 이 줄을 좁힌다.
+  - 정적 파일을 `/resource/**` 아래로 모아두면 나중에 "정적 파일은 항상 허용" 규칙 하나로 관리할 수 있다.
+  - H2 콘솔은 iframe 을 쓰므로 같은 출처 frame 을 허용하고, 자체 폼에 CSRF 토큰이 없으므로 CSRF 검사에서 제외한다.
+  - 요청은 허용되지만 CSRF 는 여전히 켜져 있어, 토큰 없는 POST(글 작성 등)는 403 이 된다 → 041-3, 041-4 에서 해결.
