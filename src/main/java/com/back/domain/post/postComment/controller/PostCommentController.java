@@ -57,7 +57,7 @@ public class PostCommentController {
 
         postService.modifyComment(postComment, modifyForm.content);
 
-        return "redirect:/posts/" + postId;
+        return "redirect:/posts/%d#postComment-%d".formatted(postId, id); // 046-B 나아가기 : 수정한 댓글 위치로
     }
 
 
@@ -76,9 +76,9 @@ public class PostCommentController {
     ) {
         Post post = postService.findById(postId).get();
 
-        postService.writeComment(post, rq.getActor(), writeForm.content); // 042-A : 작성자 저장
+        PostComment postComment = postService.writeComment(post, rq.getActor(), writeForm.content); // 042-A : 작성자 저장
 
-        return "redirect:/posts/" + postId;
+        return "redirect:/posts/%d#postComment-%d".formatted(postId, postComment.getId()); // 046-B 나아가기 : 작성한 댓글 위치로
     }
 
 
@@ -110,6 +110,6 @@ public class PostCommentController {
 
         postService.toggleCommentVote(postComment, rq.getActor());
 
-        return "redirect:/posts/" + postId;
+        return "redirect:/posts/%d#postComment-%d".formatted(postId, id); // 046-B 나아가기 : 추천한 댓글 위치로
     }
 }

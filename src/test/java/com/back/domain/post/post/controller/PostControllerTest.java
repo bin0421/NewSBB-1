@@ -228,7 +228,8 @@ class PostControllerTest {
         PostComment postComment = postService.writeComment(post, user1(), "추천할 댓글");
         String url = "/posts/%d/comments/%d/vote".formatted(post.getId(), postComment.getId());
 
-        mvc.perform(post(url).with(csrf())).andExpect(redirectedUrl("/posts/" + post.getId()));
+        mvc.perform(post(url).with(csrf()))
+                .andExpect(redirectedUrl("/posts/%d#postComment-%d".formatted(post.getId(), postComment.getId()))); // 046-B : 앵커
         assertThat(postComment.isVotedBy(user1())).isTrue();
 
         mvc.perform(post(url).with(csrf()));
@@ -285,5 +286,26 @@ class PostControllerTest {
                 .andExpect(content().string(containsString("&lt;script&gt;alert(1)&lt;/script&gt;")))
                 .andExpect(content().string(not(containsString("<script>alert(1)</script>"))))
                 .andExpect(content().string(containsString("<code>코드</code>")));
+    }
+
+    @Test
+    @DisplayName("046-B 앵커 : 댓글 작성·수정 후 해당 댓글 위치(#postComment-id)로 이동")
+    void t15() throws Exception {
+        Post post = postService.write(user1(), "앵커 글", "앵커 내용");
+
+        String location = mvc.perform(post("/posts/%d/comments/write".formatted(post.getId())).with(csrf())
+                        .param("content", "앵커 댓글"))
+                .andExpect(status().is3xxRedirection())
+                .andReturn().getResponse().getRedirectedUrl();
+
+        int commentId = post.getComments().getLast().getId();
+        assertThat(location).isEqualTo("/posts/%d#postComment-%d".formatted(post.getId(), commentId));
+
+        mvc.perform(post("/posts/%d/comments/%d/modify".formatted(post.getId(), commentId)).with(csrf())
+                        .param("_method", "PUT").param("content", "수정된 앵커 댓글"))
+                .andExpect(redirectedUrl("/posts/%d#postComment-%d".formatted(post.getId(), commentId)));
+
+        mvc.perform(get("/posts/%d".formatted(post.getId())))
+                .andExpect(content().string(containsString("id=\"postComment-%d\"".formatted(commentId))));
     }
 }
