@@ -434,3 +434,9 @@
 - **개선점 발견** : 확인용 실험이었고 날짜는 화면에 필요하다.
 - **추가한 기능** : 027-1 의 접근 레벨 지정 제거.
 - **구현 설명** : 다시 클래스 레벨 `@Getter` 로 모두 public getter.
+
+### 028-1 list.html `복습하기`
+
+- **개선점 발견** : 목록이 JSON 이라 사람이 보기 불편하다.
+- **추가한 기능** : `GET /posts` 가 `list.html` 렌더링. `th:each` 로 글 번호·제목(상세 링크)·작성일 출력, 글쓰기 링크.
+- **구현 설명** : `#temporals.format(post.createDate, 'yy.MM.dd HH:mm')` 로 `LocalDateTime` 포맷. 링크는 `@{/posts/{id}(id=${post.id})}`.

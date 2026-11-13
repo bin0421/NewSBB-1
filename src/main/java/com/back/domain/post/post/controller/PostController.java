@@ -12,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -73,9 +76,12 @@ public class PostController {
 
     @GetMapping("/posts")
     @Transactional(readOnly = true)
-    @ResponseBody
-    public List<Post> showList() {
-        return postService.findAll();
+    public String showList(Model model) {
+        List<Post> posts = postService.findAll();
+
+        model.addAttribute("posts", posts);
+
+        return "post/post/list";
     }
 
     @GetMapping("/posts/")
