@@ -57,4 +57,18 @@ class PostControllerTest {
                 .andExpect(content().string(containsString("페이징 글 15")))
                 .andExpect(content().string(containsString("<strong>2</strong>")));
     }
+
+    @Test
+    @DisplayName("029-C 없는 글 : 상세/수정 폼/삭제 요청 모두 404")
+    void t3() throws Exception {
+        mvc.perform(get("/posts/999999"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("요청하신 데이터를 찾을 수 없습니다.")));
+
+        mvc.perform(get("/posts/999999/modify"))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(post("/posts/999999/delete"))
+                .andExpect(status().isNotFound());
+    }
 }

@@ -478,3 +478,12 @@
   - 리턴 타입 `Page<Post>` 는 `Iterable` 이라 기존 `th:each="post : ${posts}"` 를 그대로 쓴다. `totalPages`, `number`, `hasPrevious()`, `hasNext()` 로 페이지 링크를 그린다.
   - `th:with` 로 `currentPage/startPage/endPage` 계산, `T(java.lang.Math)` 로 정적 메서드 호출, `#numbers.sequence(start, end)` 로 번호 반복.
   - 테스트 `t2` : 글 25개 생성 후 1페이지 첫 글이 최신글인지, 2페이지에 해당 글과 현재 페이지 표시가 있는지 확인.
+
+### 029-C 없는 글 404 처리 `나아가기`
+
+- **개선점 발견** : `/posts/999` 처럼 없는 글에 접근하면 `findById(id).get()` 에서 `NoSuchElementException` 이 터져 **500 서버 에러**가 난다. 서버 잘못이 아니라 "없는 자원"이므로 404 가 맞다.
+- **추가한 기능** : 전역 예외 처리기 `GlobalExceptionHandler` 가 `NoSuchElementException` 을 404 + "요청하신 데이터를 찾을 수 없습니다." 페이지(`templates/global/notFound.html`)로 바꾼다.
+- **구현 설명**
+  - `@ControllerAdvice` 클래스의 `@ExceptionHandler(NoSuchElementException.class)` 는 **모든 컨트롤러**에서 발생한 해당 예외를 가로챈다. `@ResponseStatus(HttpStatus.NOT_FOUND)` 로 상태 코드 지정, 리턴값은 뷰 이름.
+  - 컨트롤러마다 `orElseThrow` 로 고치지 않고 한 곳에서 처리하므로, 앞으로 추가될 댓글 등 다른 `findById(...).get()` 에도 자동 적용된다.
+  - 테스트 `t3` : 없는 글의 상세·수정 폼·삭제 요청이 모두 404 인지 확인.
