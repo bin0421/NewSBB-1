@@ -57,7 +57,10 @@ public class PostService {
     }
 
     public PostComment writeComment(Post post, Member author, String content) {
-        return post.addComment(author, content);
+        PostComment postComment = post.addComment(author, content);
+        postRepository.flush(); // 043-A : cascade 로 INSERT 를 바로 실행해 댓글 id 를 얻는다
+
+        return postComment;
     }
 
     public boolean deleteComment(Post post, PostComment postComment) {

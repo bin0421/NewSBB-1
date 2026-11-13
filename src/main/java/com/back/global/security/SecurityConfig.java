@@ -22,6 +22,9 @@ public class SecurityConfig {
                                 // 042-B 나아가기 : 글·댓글 작성은 로그인 필요
                                 .requestMatchers("/posts/write").authenticated()
                                 .requestMatchers("/posts/*/comments/write").authenticated()
+                                // 043-A 나아가기 : 수정·삭제도 로그인 필요 (작성자 확인은 컨트롤러에서)
+                                .requestMatchers("/posts/*/modify", "/posts/*/delete").authenticated()
+                                .requestMatchers("/posts/*/comments/*/modify", "/posts/*/comments/*/delete").authenticated()
                                 .requestMatchers("/**").permitAll() // 추후 상황에 맡게 변경
                                 .anyRequest().authenticated()
                 )

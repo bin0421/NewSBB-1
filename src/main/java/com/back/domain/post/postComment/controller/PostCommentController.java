@@ -36,6 +36,7 @@ public class PostCommentController {
     ) {
         Post post = postService.findById(postId).get();
         PostComment postComment = post.findCommentById(id).get();
+        postComment.checkActorCanModify(rq.getActor()); // 043-A 나아가기 : 작성자 확인
 
         model.addAttribute("post", post);
         model.addAttribute("postComment", postComment);
@@ -52,6 +53,7 @@ public class PostCommentController {
     ) {
         Post post = postService.findById(postId).get();
         PostComment postComment = post.findCommentById(id).get();
+        postComment.checkActorCanModify(rq.getActor()); // 043-A 나아가기 : 작성자 확인
 
         postService.modifyComment(postComment, modifyForm.content);
 
@@ -88,6 +90,7 @@ public class PostCommentController {
     ) {
         Post post = postService.findById(postId).get();
         PostComment postComment = post.findCommentById(id).get();
+        postComment.checkActorCanDelete(rq.getActor()); // 043-A 나아가기 : 작성자 확인
 
         postService.deleteComment(post, postComment);
 

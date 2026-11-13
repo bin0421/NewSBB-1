@@ -733,3 +733,15 @@
   - `authorizeHttpRequests` 는 위에서부터 처음 맞는 규칙이 적용되므로, 041-2 의 `/**` permitAll 보다 **위에** `.requestMatchers("/posts/write").authenticated()` 를 둔다. `*` 는 경로 한 칸(글 번호)에 대응.
   - 인증이 필요한데 비로그인이면 시큐리티가 요청을 저장(RequestCache)해 두고 `loginPage` 로 보낸다. 로그인 성공 후에는 저장된 요청으로 돌아간다.
   - 테스트 `t7`(`@WithAnonymousUser`) : 글쓰기·댓글쓰기 요청이 로그인 페이지로 리다이렉트되고 상세페이지에 안내가 보이는지 확인.
+
+### 043-A 본인 글·댓글만 수정·삭제 (서버 검사) `나아가기`
+
+- **개선점 발견** : 로그인만 하면 남의 글·댓글도 주소만 알면 수정·삭제할 수 있다. (위키독스 3장 "수정과 삭제" 참고)
+- **추가한 기능** : 글·댓글의 수정 폼/수정/삭제 요청은 로그인 필요, 작성자 본인이 아니면 **403** + "작성자만 글을 수정할 수 있습니다." 같은 안내 페이지(`templates/global/forbidden.html`).
+- **구현 설명**
+  - 권한 판단은 엔티티에 둔다 : `Post.checkActorCanModify(actor)`, `checkActorCanDelete(actor)`, `PostComment` 도 같은 메서드. 컨트롤러는 조회 직후 한 줄로 호출한다. 규칙이 한곳에 모여 있어 나중에 "관리자는 허용" 같은 변경도 쉽다.
+  - 거부는 시큐리티의 `AccessDeniedException` 을 던지고, `GlobalExceptionHandler` 가 403 페이지로 바꾼다(029-C 의 404 처리와 같은 방식).
+  - ⚠️ 작성자 비교는 `author.equals(actor)` 대신 **id 비교**로 했다. `author` 는 LAZY 로딩 프록시 객체라 클래스가 `Member` 가 아닌 하이버네이트 프록시이므로, 034-5 의 `getClass()` 기반 `equals` 로는 같은 회원도 다르다고 판단된다. 프록시의 `getId()` 는 DB 조회 없이 동작한다.
+  - 시큐리티 규칙에 `/posts/*/modify`, `/posts/*/delete`, 댓글 수정·삭제 주소를 `authenticated()` 로 추가. 비로그인은 로그인 페이지로, 로그인했지만 남의 것이면 403.
+  - `PostService.writeComment` 는 `postRepository.flush()` 로 댓글 INSERT 를 즉시 실행해 생성된 id 를 바로 쓸 수 있게 했다(cascade 저장은 원래 커밋 시점에 일어나 그전엔 id 가 0).
+  - 테스트 `t8` : user2 의 글·댓글에 user1 이 수정 폼·수정·삭제를 요청하면 모두 403 이고 데이터는 그대로인지 확인.

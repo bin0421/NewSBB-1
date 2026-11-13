@@ -153,4 +153,31 @@ class PostControllerTest {
         mvc.perform(get("/posts/1"))
                 .andExpect(content().string(containsString("후 댓글을 작성할 수 있습니다.")));
     }
+
+    @Test
+    @DisplayName("043-A 권한 : 남의 글·댓글은 수정 폼/수정/삭제 모두 403 (요청자 user1, 작성자 user2)")
+    void t8() throws Exception {
+        Member user2 = memberService.findByUsername("user2").get();
+        Post post = postService.write(user2, "user2 의 글", "user2 의 내용");
+        int commentId = postService.writeComment(post, user2, "user2 의 댓글").getId();
+        String postUrl = "/posts/%d".formatted(post.getId());
+        String commentUrl = postUrl + "/comments/%d".formatted(commentId);
+
+        mvc.perform(get(postUrl + "/modify")).andExpect(status().isForbidden());
+        mvc.perform(post(postUrl + "/modify").param("_method", "PUT")
+                        .param("title", "남의 글 수정").param("content", "남의 글 수정").with(csrf()))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string(containsString("작성자만 글을 수정할 수 있습니다.")));
+        mvc.perform(post(postUrl + "/delete").with(csrf())).andExpect(status().isForbidden());
+
+        mvc.perform(get(commentUrl + "/modify")).andExpect(status().isForbidden());
+        mvc.perform(post(commentUrl + "/modify").param("_method", "PUT")
+                        .param("content", "남의 댓글 수정").with(csrf()))
+                .andExpect(status().isForbidden());
+        mvc.perform(post(commentUrl + "/delete").param("_method", "DELETE").with(csrf()))
+                .andExpect(status().isForbidden());
+
+        assertThat(post.getTitle()).isEqualTo("user2 의 글");
+        assertThat(postService.findById(post.getId())).isPresent();
+    }
 }

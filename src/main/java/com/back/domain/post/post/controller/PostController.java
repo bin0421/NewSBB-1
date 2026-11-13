@@ -40,6 +40,7 @@ public class PostController {
             Model model
     ) {
         Post post = postService.findById(id).get();
+        post.checkActorCanModify(rq.getActor()); // 043-A 나아가기 : 작성자 확인
 
         model.addAttribute("post", post);
         model.addAttribute("form", new ModifyForm(post.getTitle(), post.getContent()));
@@ -56,6 +57,7 @@ public class PostController {
             Model model
     ) {
         Post post = postService.findById(id).get();
+        post.checkActorCanModify(rq.getActor()); // 043-A 나아가기 : 작성자 확인
         model.addAttribute("post", post);
 
         if (bindingResult.hasErrors()) return "post/post/modify";
@@ -133,6 +135,7 @@ public class PostController {
     @Transactional
     public String delete(@PathVariable int id) {
         Post post = postService.findById(id).get();
+        post.checkActorCanDelete(rq.getActor()); // 043-A 나아가기 : 작성자 확인
 
         postService.delete(post);
 
