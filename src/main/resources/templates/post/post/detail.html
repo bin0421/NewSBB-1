@@ -62,7 +62,12 @@
         <div style="white-space: pre-line;" th:text="${postComment.content}">댓글 내용</div>
         <div>
             <a th:href="@{/posts/{id}/comments/{commentId}/modify(id=${post.id}, commentId=${postComment.id})}">수정</a>
-            <a th:href="@{/posts/{id}/comments/{commentId}/delete(id=${post.id}, commentId=${postComment.id})}">삭제</a>
+            <a
+                    th:href="@{/posts/{id}/comments/{commentId}/delete(id=${post.id}, commentId=${postComment.id})}"
+                    onclick="return false;"
+            >
+                삭제
+            </a>
         </div>
         <hr>
     </li>
