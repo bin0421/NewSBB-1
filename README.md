@@ -428,3 +428,9 @@
 - **개선점 발견** : JSON 에 어떤 필드가 나가는지 조절할 수 있을까?
 - **추가한 기능** : `createDate` 에 `@Getter(PRIVATE)`, `modifyDate` 에 `@Getter(PROTECTED)`.
 - **구현 설명** : Jackson 은 public 필드 또는 public getter 가 있는 속성만 직렬화한다. 그래서 두 날짜가 JSON 에서 빠진다. `protected` 는 같은 패키지+자식만, `public` 은 어디서나 접근 가능.
+
+### 027-2 원상복구 `복습하기`
+
+- **개선점 발견** : 확인용 실험이었고 날짜는 화면에 필요하다.
+- **추가한 기능** : 027-1 의 접근 레벨 지정 제거.
+- **구현 설명** : 다시 클래스 레벨 `@Getter` 로 모두 public getter.
