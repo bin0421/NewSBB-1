@@ -416,3 +416,9 @@
 - **개선점 발견** : URL 을 문자열 치환으로 만들면 인코딩·컨텍스트 경로 처리가 안 된다.
 - **추가한 기능** : `th:href="@{{id}/modify(id=${post.id})}"`.
 - **구현 설명** : `@{...}` 링크 표현식은 `{id}` 자리에 괄호 안 파라미터를 URL 인코딩해 넣는다. `/` 로 시작하면 컨텍스트 경로도 자동으로 붙는다.
+
+### 026-5 글 목록 @ResponseBody List (JSON) `복습하기`
+
+- **개선점 발견** : 상세의 "글 목록" 링크가 갈 곳이 없다.
+- **추가한 기능** : `GET /posts` 가 `List<Post>` 를 `@ResponseBody` 로 리턴, `GET /posts/` 는 `/posts` 로 리다이렉트. `PostService.findAll`.
+- **구현 설명** : `@ResponseBody` 메서드가 객체를 리턴하면 `HttpMessageConverter`(Jackson)가 JSON 으로 변환한다. 이 JSON 을 프론트(fetch)에서 받아 그리면 클라이언트 사이드 렌더링이 된다. 끝 `/` 유무가 다른 URL 이므로 리다이렉트로 통일.
