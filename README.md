@@ -326,3 +326,9 @@
 - **개선점 발견** : 같은 `split` 을 두 번 호출하고 가독성이 떨어진다.
 - **추가한 기능** : `th:with="errStrs = ${err.split('-', 3)}, errFieldName = ${errStrs[1]}, errMsg = ${errStrs[2]}"`.
 - **구현 설명** : `th:with` 는 해당 엘리먼트 범위의 지역 변수를 선언한다. 앞에서 선언한 변수를 뒤 변수에서 바로 쓸 수 있다.
+
+### 022-1 focus 스크립트 복원, ul 은 form 의 자식 `복습하기`
+
+- **개선점 발견** : 020-2 에서 지운 포커스 기능이 없다.
+- **추가한 기능** : 폼 뒤에 스크립트 복원. 에러 `ul` 이 이제 form 안에 있으므로 `lastForm.querySelector('ul > li')` 로 첫 에러를 찾는다.
+- **구현 설명** : 013-3 의 `previousElementSibling` 대신 form 내부 탐색으로 변경.
