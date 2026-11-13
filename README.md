@@ -290,3 +290,9 @@
 - **개선점 발견** : 컨트롤러가 에러 HTML(`<li>`)까지 만들어 넘긴다. 화면 표현은 템플릿의 몫이다.
 - **추가한 기능** : 컨트롤러는 `if (bindingResult.hasErrors()) return "post/post/write";` 한 줄로 축소. 템플릿 `th:object` 안에서 `#fields.hasAnyErrors()`, `th:each="err : ${#fields.allErrors()}"` 로 출력.
 - **구현 설명** : `#fields` 는 `th:object` 객체의 BindingResult 에 접근하는 타임리프 유틸리티. 에러 목록 `ul` 은 `form` 안으로 옮겼다.
+
+### 020-2 에러 메세지 정렬, focus 스크립트 일단 제거 `복습하기`
+
+- **개선점 발견** : 템플릿 출력도 순서가 매번 다르고 `01-` 번호가 그대로 보인다.
+- **추가한 기능** : `#fields.allErrors().stream().sorted()` 로 정렬, `err.split('-', 2)[1]` 로 번호 제거.
+- **구현 설명** : 타임리프 표현식(SpEL) 안에서도 자바 메서드·스트림을 호출할 수 있다. HTML 구조가 바뀌어 기존 포커스 스크립트가 맞지 않으므로 일단 제거(022에서 복원).

@@ -2,7 +2,7 @@
 
 <form method="POST" action="doWrite" th:object="${form}">
     <ul th:if="${#fields.hasAnyErrors()}" style="color: red;">
-        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+        <li th:each="err : ${#fields.allErrors().stream().sorted()}" th:text="${err.split('-', 2)[1]}"></li>
     </ul>
 
     <div>
@@ -15,16 +15,3 @@
     </div>
     <input type="submit" value="작성">
 </form>
-
-<script>
-    // 현재까지 나온 모든 폼 검색
-    const forms = document.querySelectorAll('form');
-    // 그 중에서 가장 마지막 폼 1개 찾기
-    const lastForm = forms[forms.length - 1];
-
-    const errorFieldName = lastForm.previousElementSibling?.querySelector('li')?.dataset?.errorFieldName || '';
-
-    if (errorFieldName.length > 0) {
-        lastForm[errorFieldName].focus();
-    }
-</script>
