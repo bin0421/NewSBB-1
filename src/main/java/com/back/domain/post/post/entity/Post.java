@@ -1,9 +1,17 @@
 package com.back.domain.post.post.entity;
 
+import com.back.domain.post.postComment.entity.PostComment;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 
 @Entity
 @Getter
@@ -11,6 +19,9 @@ import lombok.NoArgsConstructor;
 public class Post extends BaseEntity {
     private String title;
     private String content;
+
+    @OneToMany(mappedBy = "post", cascade = {PERSIST, REMOVE})
+    private final List<PostComment> comments = new ArrayList<>();
 
     public Post(String title, String content) {
         this.title = title;
@@ -20,5 +31,12 @@ public class Post extends BaseEntity {
     public void modify(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public PostComment addComment(String content) {
+        PostComment postComment = new PostComment(this, content);
+        comments.add(postComment);
+
+        return postComment;
     }
 }

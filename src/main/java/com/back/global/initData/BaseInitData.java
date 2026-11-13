@@ -20,6 +20,12 @@ public class BaseInitData {
             Post post1 = postService.write("제목 1", "내용 1");
             Post post2 = postService.write("제목 2", "내용 2");
             Post post3 = postService.write("제목 3", "내용 3");
+
+            post1.addComment("댓글 1-1");
+            post1.addComment("댓글 1-2");
+            post1.addComment("댓글 1-3");
+            post2.addComment("댓글 2-1");
+            post2.addComment("댓글 2-2");
         };
     }
 }

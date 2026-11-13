@@ -487,3 +487,12 @@
   - `@ControllerAdvice` 클래스의 `@ExceptionHandler(NoSuchElementException.class)` 는 **모든 컨트롤러**에서 발생한 해당 예외를 가로챈다. `@ResponseStatus(HttpStatus.NOT_FOUND)` 로 상태 코드 지정, 리턴값은 뷰 이름.
   - 컨트롤러마다 `orElseThrow` 로 고치지 않고 한 곳에서 처리하므로, 앞으로 추가될 댓글 등 다른 `findById(...).get()` 에도 자동 적용된다.
   - 테스트 `t3` : 없는 글의 상세·수정 폼·삭제 요청이 모두 404 인지 확인.
+
+### 030-1 PostComment 엔티티, 샘플 데이터 (실패) `복습하기`
+
+- **개선점 발견** : 글에 의견을 남길 수 없다.
+- **추가한 기능** : `PostComment` 엔티티(`@ManyToOne(fetch = LAZY) Post post`, `content`), `Post.comments`(`@OneToMany(mappedBy = "post", cascade = {PERSIST, REMOVE})`), `Post.addComment(content)`. 샘플 댓글 5개 추가.
+- **구현 설명**
+  - 연관관계의 주인은 FK(`POST_ID`)를 가진 `PostComment.post`. `Post.comments` 는 `mappedBy` 로 읽기 전용 거울.
+  - `addComment` 는 댓글을 만들어 리스트에 넣기만 한다. `PERSIST` cascade 로 글이 영속 상태일 때 댓글도 함께 저장되고, `REMOVE` 로 글 삭제시 댓글도 삭제된다(029-A 글 삭제와도 맞물림).
+  - 의도된 실패 단계 : `ApplicationRunner` 람다에는 트랜잭션이 없어 `write()` 직후 글이 준영속 상태가 되므로, 이후 `addComment` 한 댓글은 **저장되지 않는다**.
