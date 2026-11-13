@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -134,5 +136,21 @@ class PostControllerTest {
 
         mvc.perform(get("/posts/%d".formatted(post.getId())))
                 .andExpect(content().string(containsString("작성자 : <span>user1</span>")));
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("042-B 비로그인 : 글쓰기·댓글쓰기는 로그인 페이지로, 상세페이지에는 로그인 안내")
+    void t7() throws Exception {
+        mvc.perform(get("/posts/write"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", endsWith("/members/login")));
+
+        mvc.perform(post("/posts/1/comments/write").with(csrf()).param("content", "비로그인 댓글"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", endsWith("/members/login")));
+
+        mvc.perform(get("/posts/1"))
+                .andExpect(content().string(containsString("후 댓글을 작성할 수 있습니다.")));
     }
 }

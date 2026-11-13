@@ -19,6 +19,9 @@ public class SecurityConfig {
                                 .requestMatchers("/favicon.ico").permitAll()
                                 .requestMatchers("/resource/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
+                                // 042-B 나아가기 : 글·댓글 작성은 로그인 필요
+                                .requestMatchers("/posts/write").authenticated()
+                                .requestMatchers("/posts/*/comments/write").authenticated()
                                 .requestMatchers("/**").permitAll() // 추후 상황에 맡게 변경
                                 .anyRequest().authenticated()
                 )

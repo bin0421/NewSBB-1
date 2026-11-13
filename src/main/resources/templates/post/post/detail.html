@@ -43,7 +43,13 @@
         }
     </script>
 
+    <!-- 042-B 나아가기 : 로그인한 경우에만 댓글 작성 폼 -->
+    <div th:if="${currentUsername == null}">
+        <a th:href="@{/members/login}">로그인</a> 후 댓글을 작성할 수 있습니다.
+    </div>
+
     <form
+            th:unless="${currentUsername == null}"
             method="POST"
             th:action="@{/posts/{id}/comments/write(id=${post.id})}"
             onsubmit="PostComment__submitWriteForm(this); return false;"
