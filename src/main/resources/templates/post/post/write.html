@@ -12,6 +12,19 @@
         ></li>
     </ul>
 
+    <script>
+        // 현재까지 나온 모든 폼 검색
+        const forms = document.querySelectorAll('form');
+        // 그 중에서 가장 마지막 폼 1개 찾기
+        const lastForm = forms[forms.length - 1];
+
+        const errorFieldName = lastForm.querySelector('ul > li')?.dataset?.errorFieldName || '';
+
+        if (errorFieldName.length > 0) {
+            lastForm[errorFieldName].focus();
+        }
+    </script>
+
     <div>
         <label for="title">제목</label><br>
         <input type="text" placeholder="제목" th:field="*{title}" autofocus>
@@ -22,16 +35,3 @@
     </div>
     <input type="submit" value="작성">
 </form>
-
-<script>
-    // 현재까지 나온 모든 폼 검색
-    const forms = document.querySelectorAll('form');
-    // 그 중에서 가장 마지막 폼 1개 찾기
-    const lastForm = forms[forms.length - 1];
-
-    const errorFieldName = lastForm.querySelector('ul > li')?.dataset?.errorFieldName || '';
-
-    if (errorFieldName.length > 0) {
-        lastForm[errorFieldName].focus();
-    }
-</script>
