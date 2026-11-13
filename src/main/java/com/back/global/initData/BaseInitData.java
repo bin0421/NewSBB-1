@@ -1,5 +1,6 @@
 package com.back.global.initData;
 
+import com.back.domain.member.member.service.MemberService;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,23 @@ public class BaseInitData {
     @Lazy
     private BaseInitData self;
     private final PostService postService;
+    private final MemberService memberService;
 
     @Bean
     ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
             self.work1();
+            self.work2();
         };
+    }
+
+    // 041-A 나아가기 : 샘플 회원 (비밀번호 1234)
+    @Transactional
+    public void work2() {
+        if (memberService.count() > 0) return;
+
+        memberService.join("user1", "1234", "user1@test.com");
+        memberService.join("user2", "1234", "user2@test.com");
     }
 
     @Transactional

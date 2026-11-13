@@ -690,3 +690,15 @@
 ---
 
 **복습하기 완료** — 강사 저장소 p-14168-2 의 커밋 001 ~ 041-5 를 모두 따라 구현했다.
+
+### 041-A 회원가입 `나아가기`
+
+- **개선점 발견** : 시큐리티는 켰지만 회원이 없다. 작성자·권한 기능의 출발점이 필요하다. ([위키독스 3-12 회원가입](https://wikidocs.net/162141) 참고)
+- **추가한 기능** : `Member` 엔티티(username, password, email — 아이디·이메일 unique), `GET/POST /members/join` 회원가입 폼, 헤더에 "글 목록 / 회원가입" 메뉴, 샘플 회원 `user1`, `user2`(비밀번호 1234).
+- **구현 설명**
+  - 패키지는 글과 같은 규칙으로 `domain.member.member.{entity,repository,service,controller}`.
+  - 비밀번호는 `PasswordEncoder`(`BCryptPasswordEncoder` 빈)로 **암호화해서** 저장한다. BCrypt 는 매번 다른 salt 를 써서 같은 비밀번호도 결과가 다르고, 비교는 `passwordEncoder.matches()` 로 한다.
+  - `JoinForm` record 는 기존 폼과 같은 메세지 형식(`순번-필드-메세지`)을 써서 `form_errors` 프래그먼트(정렬·첫 에러 필드 포커스)를 그대로 재사용한다.
+  - 비밀번호 확인 불일치, 아이디·이메일 중복처럼 어노테이션으로 표현하기 어려운 검사는 `bindingResult.rejectValue(필드, 코드, "06-passwordConfirm-...")` 로 같은 형식의 에러를 직접 추가한다.
+  - 샘플 회원은 `BaseInitData.work2()` 에서 회원이 없을 때만 생성(기존 DB 에 글이 있어도 회원은 생성되도록 글과 분리).
+  - 테스트 `MemberControllerTest` : 가입 성공시 암호화 저장, 비밀번호 불일치·중복 아이디 에러 메세지 확인.
