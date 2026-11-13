@@ -31,6 +31,17 @@ public class SecurityConfig {
                 .csrf(
                         (csrf) -> csrf
                                 .ignoringRequestMatchers("/h2-console/**")
+                )
+                // 041-B 나아가기 : 로그인/로그아웃
+                .formLogin(
+                        form -> form
+                                .loginPage("/members/login")
+                                .defaultSuccessUrl("/posts")
+                )
+                .logout(
+                        logout -> logout
+                                .logoutUrl("/members/logout")
+                                .logoutSuccessUrl("/posts")
                 );
 
         return http.build();

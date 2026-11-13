@@ -24,7 +24,17 @@
     <h1>커뮤니티 사이트 A</h1>
     <nav>
         <a href="/posts">글 목록</a>
-        <a href="/members/join">회원가입</a> <!-- 041-A 나아가기 -->
+        <!-- 041-B 나아가기 : 로그인 상태에 따라 메뉴 변경 -->
+        <th:block th:if="${currentUsername == null}">
+            <a href="/members/login">로그인</a>
+            <a href="/members/join">회원가입</a> <!-- 041-A 나아가기 -->
+        </th:block>
+        <th:block th:unless="${currentUsername == null}">
+            <span th:text="|${currentUsername}님|"></span>
+            <form method="POST" th:action="@{/members/logout}" style="display: inline;">
+                <button type="submit">로그아웃</button>
+            </form>
+        </th:block>
     </nav>
 </header>
 

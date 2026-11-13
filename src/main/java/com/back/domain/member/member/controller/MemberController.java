@@ -60,6 +60,13 @@ public class MemberController {
 
         memberService.join(form.username(), form.password(), form.email());
 
-        return "redirect:/posts";
+        return "redirect:/members/login"; // 041-B : 가입 후 로그인 페이지로
+    }
+
+
+    // 041-B 나아가기 : 로그인 폼 (처리는 시큐리티 formLogin 이 담당)
+    @GetMapping("/members/login")
+    public String showLogin() {
+        return "member/member/login";
     }
 }

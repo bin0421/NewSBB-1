@@ -471,7 +471,7 @@
 
 ### 029-B 목록 최신순 + 페이징 `나아가기`
 
-- **개선점 발견** : 목록이 오래된 글부터 나오고, 글이 많아지면 한 화면에 전부 출력된다. ([위키독스 3-09 페이징](https://wikidocs.net/161186) 참고)
+- **개선점 발견** : 목록이 오래된 글부터 나오고, 글이 많아지면 한 화면에 전부 출력된다. (위키독스 3장 "페이징" 참고)
 - **추가한 기능** : `GET /posts?page=N` — 최신글(id 내림차순) 먼저, 한 페이지 10개. 목록 아래 "이전 / 페이지 번호 / 다음" 링크(현재 페이지 앞뒤 4페이지까지, 현재 페이지는 굵게).
 - **구현 설명**
   - `PostService.getPage(page)` : `PageRequest.of(page - 1, 10, Sort.by(Sort.Order.desc("id")))` 로 `postRepository.findAll(pageable)` 호출. JPA 가 `LIMIT/OFFSET` 쿼리와 전체 개수 `COUNT` 쿼리를 함께 실행한다. 사용자에게 보이는 page 는 1부터, 스프링 Data 는 0부터라서 변환한다.
@@ -591,7 +591,7 @@
 
 ### 036-A 목록에 댓글 수 표시 `나아가기`
 
-- **개선점 발견** : 목록에서는 어떤 글에 댓글이 달렸는지 알 수 없다. ([위키독스 3-10](https://wikidocs.net/161307) 답변 개수 표시 참고)
+- **개선점 발견** : 목록에서는 어떤 글에 댓글이 달렸는지 알 수 없다. (위키독스 3장 "답변 개수 표시" 참고)
 - **추가한 기능** : 글 목록 제목 옆에 댓글 수 `[3]` (댓글이 없으면 표시하지 않음).
 - **구현 설명**
   - `th:unless="${post.comments.isEmpty()}"`, `th:text="|[${post.comments.size()}]|"`.
@@ -693,7 +693,7 @@
 
 ### 041-A 회원가입 `나아가기`
 
-- **개선점 발견** : 시큐리티는 켰지만 회원이 없다. 작성자·권한 기능의 출발점이 필요하다. ([위키독스 3-12 회원가입](https://wikidocs.net/162141) 참고)
+- **개선점 발견** : 시큐리티는 켰지만 회원이 없다. 작성자·권한 기능의 출발점이 필요하다. (위키독스 3장 "회원가입" 참고)
 - **추가한 기능** : `Member` 엔티티(username, password, email — 아이디·이메일 unique), `GET/POST /members/join` 회원가입 폼, 헤더에 "글 목록 / 회원가입" 메뉴, 샘플 회원 `user1`, `user2`(비밀번호 1234).
 - **구현 설명**
   - 패키지는 글과 같은 규칙으로 `domain.member.member.{entity,repository,service,controller}`.
@@ -702,3 +702,14 @@
   - 비밀번호 확인 불일치, 아이디·이메일 중복처럼 어노테이션으로 표현하기 어려운 검사는 `bindingResult.rejectValue(필드, 코드, "06-passwordConfirm-...")` 로 같은 형식의 에러를 직접 추가한다.
   - 샘플 회원은 `BaseInitData.work2()` 에서 회원이 없을 때만 생성(기존 DB 에 글이 있어도 회원은 생성되도록 글과 분리).
   - 테스트 `MemberControllerTest` : 가입 성공시 암호화 저장, 비밀번호 불일치·중복 아이디 에러 메세지 확인.
+
+### 041-B 로그인/로그아웃 `나아가기`
+
+- **개선점 발견** : 회원가입은 되지만 로그인할 방법이 없다. (위키독스 3장 "로그인과 로그아웃" 참고)
+- **추가한 기능** : `GET /members/login` 로그인 폼, 시큐리티 `formLogin`(성공시 `/posts`, 실패시 `?error` 메세지), `POST /members/logout` 로그아웃. 헤더 메뉴가 로그인 상태에 따라 "로그인 / 회원가입" 또는 "user1님 / 로그아웃"으로 바뀐다. 회원가입 후에는 로그인 페이지로 이동.
+- **구현 설명**
+  - `CustomUserDetailsService implements UserDetailsService` : 시큐리티가 로그인 처리 중 `loadUserByUsername` 을 호출해 회원을 조회한다. 리턴한 `User`(아이디, 암호화된 비밀번호, 권한 `ROLE_MEMBER`)의 비밀번호를 `PasswordEncoder` 로 비교한다. 비밀번호 비교는 시큐리티가 하고, 우리는 조회만 한다.
+  - 로그인 POST 처리 메서드는 직접 만들지 않는다. `formLogin().loginPage("/members/login")` 이 같은 주소의 POST 를 필터에서 처리한다. 폼 필드 이름은 기본값 `username`, `password`.
+  - 로그아웃은 CSRF 보호 때문에 POST 로만 동작한다 → 헤더에 `th:action` 폼 버튼(토큰 자동 삽입).
+  - `GlobalModelAttributes`(`@ControllerAdvice`) 의 `@ModelAttribute("currentUsername")` : 016 에서 배운 공통 변수를 **모든 컨트롤러**에 적용. 파라미터 `Principal` 로 로그인 사용자를 받는다.
+  - 테스트 : `formLogin()` 으로 로그인 성공/실패, `user("user1")` 요청 후처리기로 헤더 메뉴 확인.

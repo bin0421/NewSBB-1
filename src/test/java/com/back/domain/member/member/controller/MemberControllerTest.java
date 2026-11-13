@@ -14,7 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,7 +47,7 @@ class MemberControllerTest {
                         .param("passwordConfirm", "abcd1234")
                         .param("email", "newUser@test.com"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/posts"));
+                .andExpect(redirectedUrl("/members/login"));
 
         Member member = memberService.findByUsername("newUser").get();
         assertThat(member.getPassword()).isNotEqualTo("abcd1234");
@@ -62,5 +67,33 @@ class MemberControllerTest {
                 .andExpect(content().string(containsString("이미 사용중인 아이디입니다.")));
 
         assertThat(memberService.existsByEmail("other@test.com")).isFalse();
+    }
+
+    @Test
+    @DisplayName("041-B 로그인 성공 : 샘플 회원 user1 / 1234")
+    void t3() throws Exception {
+        mvc.perform(formLogin("/members/login").user("user1").password("1234"))
+                .andExpect(authenticated().withUsername("user1"))
+                .andExpect(redirectedUrl("/posts"));
+    }
+
+    @Test
+    @DisplayName("041-B 로그인 실패 : 비밀번호 틀림")
+    void t4() throws Exception {
+        mvc.perform(formLogin("/members/login").user("user1").password("wrong"))
+                .andExpect(unauthenticated())
+                .andExpect(redirectedUrl("/members/login?error"));
+    }
+
+    @Test
+    @DisplayName("041-B 헤더 메뉴 : 로그인 상태면 아이디와 로그아웃, 아니면 로그인/회원가입")
+    void t5() throws Exception {
+        mvc.perform(get("/posts").with(user("user1")))
+                .andExpect(content().string(containsString("user1님")))
+                .andExpect(content().string(containsString("로그아웃")));
+
+        mvc.perform(get("/posts"))
+                .andExpect(content().string(containsString("로그인")))
+                .andExpect(content().string(containsString("회원가입")));
     }
 }
