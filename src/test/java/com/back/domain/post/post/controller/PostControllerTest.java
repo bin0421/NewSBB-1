@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@WithMockUser // 041-1 시큐리티 도입 후 : 테스트 요청을 인증된 사용자로 보낸다
 class PostControllerTest {
     @Autowired
     private MockMvc mvc;
@@ -36,7 +39,7 @@ class PostControllerTest {
     void t1() throws Exception {
         Post post = postService.write("삭제할 글", "삭제할 내용");
 
-        mvc.perform(post("/posts/%d/delete".formatted(post.getId())))
+        mvc.perform(post("/posts/%d/delete".formatted(post.getId())).with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/posts"));
 
@@ -68,7 +71,7 @@ class PostControllerTest {
         mvc.perform(get("/posts/999999/modify"))
                 .andExpect(status().isNotFound());
 
-        mvc.perform(post("/posts/999999/delete"))
+        mvc.perform(post("/posts/999999/delete").with(csrf()))
                 .andExpect(status().isNotFound());
     }
 
@@ -95,10 +98,10 @@ class PostControllerTest {
         mvc.perform(get(base + "/modify"))
                 .andExpect(status().isNotFound());
 
-        mvc.perform(post(base + "/modify").param("_method", "PUT").param("content", "수정 내용"))
+        mvc.perform(post(base + "/modify").param("_method", "PUT").param("content", "수정 내용").with(csrf()))
                 .andExpect(status().isNotFound());
 
-        mvc.perform(post(base + "/delete").param("_method", "DELETE"))
+        mvc.perform(post(base + "/delete").param("_method", "DELETE").with(csrf()))
                 .andExpect(status().isNotFound());
     }
 }
