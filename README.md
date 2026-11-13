@@ -238,3 +238,11 @@
 - **개선점 발견** : 템플릿 곳곳에 `?.` 를 쓰는 대신, GET 에도 `writeForm` 을 넣어주면 된다.
 - **추가한 기능** : `showWrite(@Valid WriteForm form)` 로 파라미터 추가, 템플릿은 다시 `writeForm.title`.
 - **구현 설명** : 파라미터로 받기만 해도 모델에 `writeForm` 이 담긴다. 그러나 `@Valid` 때문에 빈 폼을 여는 순간 유효성 검사가 실패해 400 에러(BindingResult 없음) → 의도된 실패 단계.
+
+### 014-8 @Valid 제거로 GET 성공 `복습하기`
+
+- **개선점 발견** : 폼을 처음 보여줄 때는 검사할 필요가 없다.
+- **추가한 기능** : `showWrite(WriteForm form)` — `@Valid` 제거.
+- **구현 설명** : 검사 없이 바인딩만 해서 빈 `writeForm` 이 모델에 담기므로 GET 이 정상 작동. 이렇게 하면 `/posts/write?title=abc` 처럼 초기값을 쿼리로 넣을 수도 있다.
+
+> 017 회차는 커밋이 없다.
