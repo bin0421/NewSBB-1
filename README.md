@@ -502,3 +502,9 @@
 - **개선점 발견** : 샘플 댓글이 DB 에 들어가지 않는다.
 - **추가한 기능** : 샘플 생성 로직을 `@Transactional public void work1()` 로 옮기고, 러너에서 `self.work1()` 호출. `@Autowired @Lazy private BaseInitData self;`
 - **구현 설명** : `@Transactional` 은 스프링 **프록시**를 거쳐 호출될 때만 적용된다. 같은 객체 안에서 `this.work1()` 로 부르면 프록시를 우회하므로, 자기 자신의 프록시(`self`)를 주입받아 호출한다. `@Lazy` 는 자기 참조 순환 의존을 지연 주입으로 풀어준다. 하나의 트랜잭션 안에서 글이 영속 상태로 유지되어 커밋 때 댓글까지 저장된다.
+
+### 031 댓글 목록 `복습하기`
+
+- **개선점 발견** : 댓글이 저장돼도 화면에 보이지 않는다.
+- **추가한 기능** : 상세페이지에 댓글 목록(번호, 작성일, 수정일, 내용).
+- **구현 설명** : `th:each="postComment : ${post.comments.reversed}"` — 최신 댓글이 위로. `reversed` 는 Java 21 `List.reversed()`(SequencedCollection). `comments` 는 LAZY 컬렉션이지만 `showDetail` 이 `@Transactional(readOnly = true)` 이고 OSIV(open-in-view) 기본 활성이라 뷰 렌더링 중 조회된다.
