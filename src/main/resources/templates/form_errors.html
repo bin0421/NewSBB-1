@@ -1,0 +1,25 @@
+<th:block th:fragment="formErrorsFragment">
+    <ul th:if="${#fields.hasAnyErrors()}" style="color: red;">
+        <li
+                th:each="err : ${#fields.allErrors().stream().sorted()}"
+                th:with="errStrs = ${err.split('-', 3)},
+                    errFieldName = ${errStrs[1]},
+                    errMsg = ${errStrs[2]}"
+                th:data-error-field-name="${errFieldName}"
+                th:text="${errMsg}"
+        ></li>
+    </ul>
+
+    <script>
+        // 현재까지 나온 모든 폼 검색
+        const forms = document.querySelectorAll('form');
+        // 그 중에서 가장 마지막 폼 1개 찾기
+        const lastForm = forms[forms.length - 1];
+
+        const errorFieldName = lastForm.querySelector('ul > li')?.dataset?.errorFieldName || '';
+
+        if (errorFieldName.length > 0) {
+            setTimeout(() => lastForm[errorFieldName].focus());
+        }
+    </script>
+</th:block>
