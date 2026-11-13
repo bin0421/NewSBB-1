@@ -21,7 +21,7 @@
         const errorFieldName = lastForm.querySelector('ul > li')?.dataset?.errorFieldName || '';
 
         if (errorFieldName.length > 0) {
-            lastForm[errorFieldName].focus();
+            setTimeout(() => lastForm[errorFieldName].focus(), 1000);
         }
     </script>
 
