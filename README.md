@@ -520,3 +520,9 @@
 - **개선점 발견** : 서버에 보내기 전에 프론트에서 먼저 검사하고 싶다. 그러려면 기본 전송을 막아야 한다.
 - **추가한 기능** : `<form onsubmit="return false;">`.
 - **구현 설명** : `onsubmit` 핸들러가 `false` 를 리턴하면 브라우저 기본 동작(전송)이 취소된다. 지금은 아무리 눌러도 전송되지 않는다.
+
+### 032-3 PostComment__submitWriteForm `복습하기`
+
+- **개선점 발견** : 전송을 막았으니 대신 실행될 함수가 필요하다.
+- **추가한 기능** : `onsubmit="PostComment__submitWriteForm(this); return false;"`, 함수는 우선 `form.content.value` 의 앞뒤 공백 제거.
+- **구현 설명** : `this` 는 폼 엘리먼트. `form.content` 처럼 name 으로 필드에 접근한다. 함수 이름의 `도메인__동작` 접두어는 전역 함수 이름 충돌을 피하는 관례.
