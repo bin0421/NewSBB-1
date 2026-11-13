@@ -130,3 +130,12 @@
 - **개선점 발견** : 한 글자 제목이나 지나치게 긴 내용도 저장된다.
 - **추가한 기능** : 제목 2~20자, 내용 2~100자 길이 체크를 `if` 문으로 추가.
 - **구현 설명** : 체크 항목이 늘어날수록 `if` 문이 길어진다. 이 반복을 다음 커밋에서 어노테이션으로 바꾼다.
+
+### 009-2 Validation 의존성, @Validated, @NotBlank, @Size `복습하기`
+
+- **개선점 발견** : 손으로 쓴 `if` 유효성 체크가 6줄. 규칙을 선언만 하고 싶다.
+- **추가한 기능** : `spring-boot-starter-validation` 의존성, 컨트롤러에 `@Validated`, 파라미터에 `@NotBlank`, `@Size(min, max)`.
+- **구현 설명**
+  - Bean Validation(jakarta.validation) 어노테이션으로 규칙을 선언하면 스프링이 메서드 호출 전에 검사한다.
+  - `@RequestParam` 같은 단일 파라미터에 붙은 제약을 검사하려면 클래스에 `@Validated` 가 필요하다.
+  - 실패하면 예외(`HandlerMethodValidationException`)가 발생해 에러 페이지가 뜬다. 폼 재표시는 일단 사라졌다 → 011에서 복구.
