@@ -597,3 +597,12 @@
   - `th:unless="${post.comments.isEmpty()}"`, `th:text="|[${post.comments.size()}]|"`.
   - `comments` 는 LAZY 컬렉션이라 글마다 댓글 조회 쿼리가 따로 나가는 **N+1 문제**가 생긴다. `hibernate.default_batch_fetch_size: 100` 을 설정해 한 페이지 글들의 댓글을 `IN (...)` 쿼리 한 번으로 모아서 가져오게 했다.
   - 테스트 `t4` : 댓글 4개 단 글이 목록에 `[4]` 로 보이는지 확인.
+
+### 036-B 없는 댓글 404 확인 `나아가기`
+
+- **개선점 발견** : 029-C 의 전역 404 처리가 댓글에도 적용되는지 보장되지 않았고, 404 페이지 문구는 "글"만 언급한다.
+- **추가한 기능** : 404 안내 문구를 "글 또는 댓글"로 수정, 테스트 `t5` 로 없는 댓글의 수정 폼·수정·삭제 요청이 모두 404 인지 확인.
+- **구현 설명**
+  - 댓글 컨트롤러도 `post.findCommentById(id).get()` 을 쓰므로 `NoSuchElementException` 이 발생 → `GlobalExceptionHandler` 가 404 로 바꾼다. 전역 처리 덕분에 댓글 쪽 코드는 고치지 않았다.
+  - 수정 요청은 `_method=PUT` 파라미터를 함께 보내 038 이후(HiddenHttpMethodFilter)에도 그대로 통과하게 했다.
+  - ⚠️ 테스트 `t5` 코드는 실수로 036-A 커밋에 먼저 포함되었다.
